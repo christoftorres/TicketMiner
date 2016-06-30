@@ -1,0 +1,194 @@
+<script src="../lib/chart.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	function getHostName(url) {
+        var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+        if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+            return match[2];
+        } else {
+            return null;
+        }
+    }
+    function getReadableDurationString(duration) {
+	    var x = duration / 1000;
+		var seconds = Math.floor(x) % 60;
+		x /= 60;
+		var minutes = Math.floor(x) % 60;
+		x /= 60;
+		var hours   = Math.floor(x) % 24;
+		return ((hours < 10) ? '0' : '')+hours+':'+((minutes < 10) ? '0' : '')+minutes+':'+((seconds < 10) ? '0' : '')+seconds;
+	}
+	function getReadableHashRateString(hashrate){
+	    var i = -1;
+	    var byteUnits = [ ' KHs', ' MHs', ' GHs', ' THs', ' PHs' ];
+	    do {
+	        hashrate = hashrate / 1024;
+	        i++;
+	    } while (hashrate > 1024);
+	    return hashrate.toFixed(2) + byteUnits[i];
+	}
+	function showJob(id) {
+		window.activeJob = id;
+		$("#back-button").attr('onclick', '').click(function(){ window.postMessage(JSON.stringify({ command : 'change-panel-size', data : "normal-view" }), "*"); loadContent('jobs'); });
+		window.postMessage(JSON.stringify({ command : 'change-panel-size', data : "extended-view" }), "*");
+		$("#title").hide();
+        $("#jobs").empty();
+        var job = null;
+		for (var index in window.jobs) {
+        	if (window.jobs[index].id == id) {
+        		job = window.jobs[index];	
+        		break;
+        	}
+        }
+        $("#jobs").append('<table style="width: 100%; margin-top: 0px">'+
+    		'<tr><td colspan="2" style="font-size: 8pt"><small style="margin: 0px 5px 0px 10px; font-weight: bold">Server:</small><small><span id="server" style="font-style: italic">'+getHostName(job.server)+'</span></small>&nbsp;<img id="security" src="'+(job.server.includes("wss://") ? 'icons/secure.png' : 'icons/not-secure.png')+'" height="8" width="8" style="cursor: pointer" data-toggle="tooltip" title="'+(job.server.includes("wss://") ? 'Connection is secure' : 'Connection is not secure')+'"></td></tr>'+
+    		'<tr><td colspan="2" style="padding: 5px"><div class="panel panel-default" style="margin: 0px; text-align: left"><div class="panel-heading" style="font-size: 8pt; font-weight: bold; height: 20px; padding: 4px 10px">Job Info</div><div class="panel-body" style="font-size: 7pt; height: 195px; padding: 5px 0px">'+
+    			'<div style="padding: 2px 7px"><canvas id="hashRateChart" style="border: 1px solid lightgray; margin: 0px; padding: 0px" width="120px" height="35px"></canvas></div>'+
+    			'<table>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Status:</span></td><td><span id="job-info-status">'+job.status+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Workers:</span></td><td><span id="workers">'+job.threads+' '+((job.threads == 1) ? 'Thread' : 'Threads')+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Algorithm:</span></td><td><span id="algorithm">'+String(job.algorithm).charAt(0).toUpperCase()+String(job.algorithm).slice(1)+((job.algorithm == 'ethash') ? ' ('+String(window.preferences.ethashClient).charAt(0).toUpperCase()+String(window.preferences.ethashClient).slice(1)+')' : '')+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Difficulty:</span></td><td><span id="difficulty">'+job.difficulty+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Duration:</span></td><td><span id="duration">'+getReadableDurationString(job.duration)+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Donation:</span></td><td><span id="donate">'+String(job.donate).charAt(0).toUpperCase()+String(job.donate).slice(1)+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Amount:</span></td><td><span id="amount">'+job.amount.toFixed(5)+' '+window.preferences.currency+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Speed:</span></td><td><span id="job-info-speed">'+getReadableHashRateString(job.hashRate)+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Avg. Speed:</span></td><td><span id="avgspeed">'+getReadableHashRateString(job.avgHashRate)+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Share Consent:</span></td><td><span id="shares">'+
+    						'<span class="glyphicon glyphicon-sort" style="cursor: pointer" data-toggle="tooltip" title="Submitted"><span id="submitted" style="padding-left: 2px">'+job.submittedShares+'</span></span>'+
+			    			'<span class="glyphicon glyphicon-ok" style="padding-left: 5px; cursor: pointer" data-toggle="tooltip" title="Accepted"><span id="accepted" style="padding-left: 2px">'+job.acceptedShares+'</span></span>'+
+			    			'<span class="glyphicon glyphicon-remove" style="padding-left: 5px; cursor: pointer" data-toggle="tooltip" title="Rejected"><span id="rejected" style="padding-left: 2px">'+job.rejectedShares+'</span></span></span></td></tr>'+
+    			'</table></div></div></td></tr>'+
+    		'<tr><td><div id="job-info-start"><button type="button" class="btn btn-default btn-xs" style="width: 60px; height: 18px; font-size: 8pt; margin: 2px 0px 5px 10px" onclick="startJob('+job.id+')"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start</button></div><div id="job-info-stop"><button type="button" class="btn btn-default btn-xs" style="width: 60px; height: 18px; font-size: 8pt; margin: 2px 0px 5px 10px" onclick="stopJob('+job.id+')"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop</button></div></td><td><div><button type="button" class="btn btn-danger btn-xs" style="width: 60px; height: 18px; font-size: 8pt; margin: 2px 10px 5px 0px" onclick="deleteJob('+job.id+')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button></div></td></tr>'+
+    	'</table>');
+		if (job.status == 'Stopped' || job.status == 'Connection Error') {
+			$("#jobs").find("#job-info-start").show();
+			$("#jobs").find("#job-info-stop").hide();
+		} else {
+			$("#jobs").find("#job-info-start").hide();
+			$("#jobs").find("#job-info-stop").show();
+		}
+		$('[data-toggle="tooltip"]').tooltip();
+		var ctx = document.getElementById("hashRateChart");
+		var data = {
+			labels: ['', '', '', '', '', '', '', '', '', ''],
+		    datasets: [
+		        {
+		            fill: true,
+		            lineTension: 0.1,
+		            backgroundColor: "rgba(75,192,192,0.4)",
+		            borderColor: "rgba(75,192,192,1)",
+		            borderCapStyle: 'butt',
+		            borderDash: [],
+		            borderDashOffset: 0.0,
+		            borderJoinStyle: 'miter',
+		            pointBorderColor: "rgba(75,192,192,1)",
+		            pointBackgroundColor: "#fff",
+		            pointBorderWidth: 1,
+		            pointHoverRadius: 5,
+		            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+		            pointHoverBorderColor: "rgba(220,220,220,1)",
+		            pointHoverBorderWidth: 2,
+		            pointRadius: 1,
+		            pointHitRadius: 10,
+		            data: job.hashRateQueue
+		        }
+		    ]
+		};
+		job.hashRateChart = new Chart(ctx, {
+		    type: 'line',
+		    data: data,
+		    responsive: true,
+		    options: {
+		    	tooltips : {
+		    	  callbacks: {
+				    label: function(tooltipItem, data) {
+					  return tooltipItem.yLabel + ' Hashes/s';
+					}
+				  }
+				},
+		    	defaultFontSize: 9,
+		    	title: {
+		            display: false
+		        },
+		        legend: {
+		            display: false
+		        },
+		        scales: {
+		            xAxes: [{
+		                display: false
+		            }],
+		            yAxes: [{
+		                display: false
+		            }]
+		        }
+		    }
+		});
+    }
+	function listJobs() {
+		$("#back-button").attr('onclick', '').click(function(){loadContent('menu')});
+		if (window.jobs.length == 0) {
+			$("#jobs").text("No jobs");
+		} else {
+			var $list_group = $("<div>", {class: "list-group", style: "margin: 5px"});
+			for (var index in window.jobs) {
+				var job = window.jobs[index];
+				$list_group.append('<table id="job_'+job.id+'" style="font-size: xx-small; text-align: left; padding: 5px" class="list-group-item">'+
+						'<tr><td style="width: 35px"><b>Server:&nbsp;</b></td><td style="width: 65px; font-style: italic">'+getHostName(job.server)+'&nbsp;<img id="security" src="icons/not-secure.png" height="8" width="8"></td>'+
+							'<td rowspan="3" style="font-size: small">'+
+								((job.donate) ? '<img src="icons/donate-100.png" height="16" width="16" style="padding-left: 2px; cursor: pointer" data-toggle="tooltip" title="Donation">' : '<img src="icons/tickets-100.png" height="16" width="16" style="padding-left: 2px; cursor: pointer" data-toggle="tooltip" title="Tickets">')+'</td>'+
+							'<td rowspan="3" style="font-size: small">'+
+								'<span id="start" class="glyphicon glyphicon-play" style="padding-left: 5px; cursor: pointer" data-toggle="tooltip" title="Start" onclick="startJob('+job.id+')"></span>'+
+								'<span id="stop" class="glyphicon glyphicon-stop" style="padding-left: 5px; cursor: pointer" data-toggle="tooltip" title="Stop" onclick="stopJob('+job.id+')"></span>'+
+								'<span class="glyphicon glyphicon-menu-right" style="padding-left: 5px; cursor: pointer" onmouseover="this.parentNode.parentNode.parentNode.parentNode.style.backgroundColor=\'#EEEEEE\'" onmouseout="this.parentNode.parentNode.parentNode.parentNode.style.backgroundColor=\'white\'" onclick="showJob('+job.id+')"></span></td></tr>'+
+						'<tr><td><b>Status:&nbsp;</b></td><td id="status">'+job.status+'</td></tr>'+
+						'<tr><td><b>Speed:&nbsp;</b></td><td id="speed">'+getReadableHashRateString(job.hashRate)+'</td></tr>'+
+						'</table>');
+				if (job.status == 'Stopped' || job.status == 'Connection Error') {
+					$list_group.find("#job_"+job.id).find("#start").show();
+					$list_group.find("#job_"+job.id).find("#stop").hide();
+				} else {
+					$list_group.find("#job_"+job.id).find("#start").hide();
+					$list_group.find("#job_"+job.id).find("#stop").show();
+				}
+				if (job.server.includes('wss://')) {  
+			        $list_group.find("#security").attr("src", "icons/secure.png");
+			    } else {
+			        $list_group.find("#security").attr("src", "icons/not-secure.png");
+			    }
+			}
+			$("#jobs").html($list_group);
+			var $label = $("<div>", {class: "small", style: "text-align: center; color: gray"});
+			if (window.jobs.length == 1) {	
+				$label.text("1 Job");
+			} else {
+				$label.text(window.jobs.length+" Jobs");
+			}
+			$("#jobs").append($label);
+		}
+    }
+    function startJob(id) {
+    	window.postMessage(JSON.stringify({ command : 'start-mining-job', data : { id : id } }), "*");
+    }
+    function stopJob(id) {
+    	window.postMessage(JSON.stringify({ command : 'stop-mining-job', data : { id : id } }), "*");
+    }
+    function deleteJob(id) {
+    	window.postMessage(JSON.stringify({ command : 'delete-mining-job', data : { id : id } }), "*");
+    	for (var index in window.jobs) {
+            if (window.jobs[index].id == id) {
+              	window.jobs.splice(index, 1);
+              	break;
+            }
+        }  
+        window.postMessage(JSON.stringify({ command : 'change-panel-size', data : "normal-view" }), "*"); loadContent('jobs');
+        listJobs();
+    } 
+    listJobs();
+	$('[data-toggle="tooltip"]').tooltip(); 
+</script>
+<div style="width: 100%">
+    <div id="title" style="text-align: center; color: gray; margin-bottom: 5px">
+        Jobs
+    </div>
+    <div id="jobs" class="small" style="text-align: center"></div>
+</div>

@@ -1,0 +1,86 @@
+<script type="text/javascript">
+  function loadWallet() {
+    showBackButton();
+    $("#content").load("wallet.html");
+  }
+
+  function loadJobs() {
+    showBackButton();
+    $("#content").load("jobs.html");
+  }
+
+  function loadMiner() {
+    showBackButton();
+    $("#content").load("miner.html");
+  }
+
+  function loadSettings() {
+    showBackButton();
+    $("#content").load("settings.html");
+  }
+
+  function showBackButton() {
+    $("#back-button").show();
+    $("#logo").css("margin-left", "5px");
+  }
+  
+  function getActiveJobs(jobs) {
+    var activeJobs = 0;
+    for (var index in jobs) {
+      if (jobs[index].status != 'Stopped'          && 
+          jobs[index].status != 'Connection Error' && 
+          jobs[index].status != 'Not running') {
+        activeJobs++;
+      }
+    }
+    return activeJobs;
+  }
+
+  $("#nrOfJobs").text(getActiveJobs(window.jobs));
+</script>
+<table style="margin: auto">
+  <tr>
+    <td>
+      <div class="panel panel-default" style="margin: 10px 5px 5px 10px; cursor: pointer" onmouseover='this.style.backgroundColor="#EEEEEE"' 
+  onmouseout='this.style.backgroundColor="white"' onclick="loadWallet()">
+        <div class="panel-body" style="text-align: center; overflow: hidden; padding: 10px 5px 5px 5px; width: 70px">
+           <img src="icons/wallet-100.png" height="35" width="35"> 
+           <br/>
+           <small>Wallet</small>
+        </div>
+      </div>
+    </td>
+    <td>
+      <div class="panel panel-default" style="margin: 10px 10px 5px 5px; cursor: pointer" onmouseover='this.style.backgroundColor="#EEEEEE"' 
+  onmouseout='this.style.backgroundColor="white"' onclick="loadJobs()">
+        <div class="panel-body" style="text-align: center; overflow: hidden; padding: 10px 10px 5px 10px; width: 70px">
+          <img src="icons/jobs-100.png" height="35" width="35"> 
+          <br/>
+          <small>Jobs <span id="nrOfJobs" class="badge" style="font-size: 8px">0</span></small>
+        </div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="panel panel-default" style="margin: 5px 5px 10px 10px; cursor: pointer" onmouseover='this.style.backgroundColor="#EEEEEE"' 
+  onmouseout='this.style.backgroundColor="white"' onclick="loadMiner()">
+        <div class="panel-body" style="text-align: center; overflow: hidden; padding: 10px 5px 5px 5px; width: 70px">
+          <img src="icons/pickaxe-100.png" height="35" width="35">
+          <br/>
+           <small>Miner</small>
+        </div>
+      </div>
+    </td>
+    <td>
+      <div class="panel panel-default" style="margin: 5px 10px 10px 5px; cursor: pointer" onmouseover='this.style.backgroundColor="#EEEEEE"' 
+  onmouseout='this.style.backgroundColor="white"' onclick="loadSettings()">
+        <div class="panel-body" style="text-align: center; overflow: hidden; padding: 10px 5px 5px 5px; width: 70px">
+          <img src="icons/settings-100.png" height="35" width="35">
+          <br/>
+          <small>Settings</small>
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>

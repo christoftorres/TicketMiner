@@ -1,0 +1,285 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../lib/bootstrap-3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../lib/bootstrap-3.3.6/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../lib/bootstrap-slider.min.css">
+    <script src="../lib/jquery-1.12.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/bootstrap-3.3.6/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      function loadContent(content) {
+        $("#content").empty().load(content+".html");
+        if (content == 'menu' || content == 'donation' || content == 'purchase') {
+          $("#back-button").hide();
+          $("#logo").css("margin-left", "27px");
+        } else {
+          $("#back-button").show();
+          $("#logo").css("margin-left", "5px");
+        }
+      }
+      
+      window.onload = function() {
+        if (window.jQuery) {  
+          console.log("jQuery is loaded. Version: "+$.fn.jquery);
+        } else {
+          console.log("Error: jQuery is not loaded!");
+        }
+
+        if ($.fn.tooltip.Constructor.VERSION) {
+          console.log("Bootstrap is loaded. Version: "+$.fn.tooltip.Constructor.VERSION);
+        } else {
+          console.log("Error: Bootstrap is not loaded!");
+        }
+
+        loadContent('menu');
+      }
+
+      window.addEventListener('message', function(event) {
+        var message = JSON.parse(event.data);
+        if (message.command == 'miner-notification-status') {
+          var id = message.data.id;
+          var status = message.data.status;
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].status = status;
+              $("#job_"+id).find("#status").text(status);
+              $("#job-info-status").text(status);
+              if (status == 'Stopped' || status == 'Connection Error') {
+                $("#job_"+id).find("#start").show();
+                $("#job_"+id).find("#stop").hide();
+                if (window.activeJob == id) {
+                  $("#job-info-start").show();
+                  $("#job-info-stop").hide();
+                }
+              } else {
+                $("#job_"+id).find("#start").hide();
+                $("#job_"+id).find("#stop").show();
+                if (window.activeJob == id) {
+                  $("#job-info-start").hide();
+                  $("#job-info-stop").show();
+                }
+              }
+              window.jobs[index].hashRate = 0;
+              $("#job_"+id).find("#speed").text(getReadableHashRateString(0));
+              if (window.activeJob == id) {
+                $("#job-info-speed").text(getReadableHashRateString(0));
+              }
+              break;
+            }
+          }
+        } 
+        if (message.command == 'miner-notification-algorithm') {
+          var id = JSON.parse(message.data.id);
+          var algorithm = JSON.parse(message.data.algorithm);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].algorithm = algorithm;
+              if (window.activeJob == id) {
+                $("#algorithm").text(algorithm);
+              }
+              break;
+            }
+          }
+        }
+        if (message.command == 'miner-notification-difficulty') {
+          var id = JSON.parse(message.data.id);
+          var difficulty = JSON.parse(message.data.difficulty);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].difficulty = difficulty;
+              if (window.activeJob == id) {
+                $("#difficulty").text(difficulty);
+              }
+              break;
+            }
+          }
+        }
+        if (message.command == 'miner-notification-hashrate') {
+          var id = JSON.parse(message.data.id);
+          var hashRate = JSON.parse(message.data.hashRate);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].hashRate = hashRate;
+              var hashRateQueue = window.jobs[index].hashRateQueue;
+              for (var i = 0; i < hashRateQueue.length-1; i++) {
+                hashRateQueue[i] = hashRateQueue[i+1];
+              }
+              hashRateQueue[hashRateQueue.length-1] = hashRate;
+              if (window.jobs[index].hashRateChart != null) {
+                window.jobs[index].hashRateChart.data.datasets[0].data = window.jobs[index].hashRateQueue;
+                window.jobs[index].hashRateChart.update(0 ,false);  
+              }
+              $("#job_"+id).find("#speed").text(getReadableHashRateString(hashRate));
+              if (window.activeJob == id) {
+                $("#job-info-speed").text(getReadableHashRateString(hashRate));
+              }
+              break;
+            }
+          }
+        } 
+        if (message.command == 'miner-notification-average-hashrate') {
+          var id = JSON.parse(message.data.id);
+          var avgHashRate = JSON.parse(message.data.avgHashRate);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].avgHashRate = avgHashRate;
+              if (window.activeJob == id) {
+                $("#avgspeed").text(getReadableHashRateString(avgHashRate));
+              }
+              break;
+            }
+          }
+        } 
+        if (message.command == 'miner-notification-duration') {
+          var id = JSON.parse(message.data.id);
+          var duration = JSON.parse(message.data.duration);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].duration = duration;
+              if (window.activeJob == id) {
+                $("#duration").text(getReadableDurationString(duration));
+              }
+              break;
+            }
+          }
+        } 
+        if (message.command == 'miner-notification-share-submitted') {
+          var id = JSON.parse(message.data.id);
+          var submittedShares = JSON.parse(message.data.submittedShares);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].submittedShares = submittedShares;
+              if (window.activeJob == id) {
+                $("#shares").find("#submitted").text(submittedShares);
+              }
+              break;
+            }
+          }
+        } 
+        if (message.command == 'miner-notification-share-accepted') {
+          var id = JSON.parse(message.data.id);
+          var acceptedShares = JSON.parse(message.data.acceptedShares);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].acceptedShares = acceptedShares;
+              if (window.activeJob == id) {
+                $("#shares").find("#accepted").text(acceptedShares);
+              }
+              break;
+            }
+          }
+        } 
+        if (message.command == 'miner-notification-share-rejected') {
+          var id = JSON.parse(message.data.id);
+          var rejectedShares = JSON.parse(message.data.rejectedShares);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].rejectedShares = rejectedShares;
+              if (window.activeJob == id) {
+                $("#shares").find("#rejected").text(rejectedShares);
+              }
+              break;
+            }
+          }
+        } 
+        if (message.command == 'new-job') {
+          var job = message.data.job;
+          if (window.jobs != undefined) {
+            for (var index in window.jobs) {
+              if (job.id == window.jobs[index].id) {
+                return;
+              }
+            }
+          } else {
+            window.jobs = [];
+          }
+          window.jobs.push(job);
+        } 
+        if (message.command == 'new-ticket') {
+          var ticket = message.data.ticket;
+          if (window.tickets != undefined) {
+            for (var index in window.tickets) {
+              if (ticket.info.hash == window.tickets[index].info.hash) {
+                return;
+              }
+            }
+          } else {
+            window.tickets = [];
+          }
+          window.tickets.push(ticket);
+          if ($("#title").text() == "Wallet") {
+            listTickets();
+          }
+          if ($("#title").text() == "Tickets") {
+            showTickets(window.currentOrigin); 
+          }
+        }
+        if (message.command == 'remove-tickets') {
+          var tickets = message.data.tickets;
+          for (var i in tickets) {
+            for (var j in window.tickets) {
+              if (tickets[i].info.hash == window.tickets[j].info.hash) {
+                window.tickets.splice(j, 1);
+                break;
+              }
+            }
+          }
+          if ($("#title").text() == "Wallet") {
+            listTickets();
+          }
+          if ($("#title").text() == "Tickets") {
+            showTickets(window.currentOrigin); 
+          }
+        }
+        if (message.command == 'miner-notification-amount') {
+          var id = JSON.parse(message.data.id);
+          var amount = JSON.parse(message.data.amount);
+          for (var index in window.jobs) {
+            if (id == window.jobs[index].id) {
+              window.jobs[index].amount = amount;
+              if (window.activeJob == id) {
+                $("#amount").text(amount.toFixed(5)+' '+window.preferences.currency);
+              }
+              break;
+            }
+          }
+        } 
+        if (message.command == 'donation-request') {
+          window.request = JSON.parse(message.data);
+          loadContent('donation');
+        } else
+        if (message.command == 'purchase-request') {
+          window.request = JSON.parse(message.data);
+          loadContent('purchase');
+        } else
+        if (message.command == 'show-miner') {
+          window.server = JSON.parse(message.data).server;
+          loadContent('miner');
+        } else
+        if (message.command == 'show-menu') {
+          window.server = JSON.parse(message.data).server;
+          window.tickets = JSON.parse(message.data).tickets;
+          window.jobs = JSON.parse(message.data).jobs;
+          window.preferences = JSON.parse(message.data).preferences;
+          loadContent('menu');
+        }
+      }, false);
+    </script>
+  </head>
+
+  <body>
+    <div style="overflow: hidden">
+      <div style="cursor: pointer">
+        <img id="back-button" src="icons/back-96-gray.png" height="20" width="20" style="margin: 14px 0px 0px 2px; float: left; padding: 0px" onmouseover="this.src='icons/back-96.png'" onmouseout="this.src='icons/back-96-gray.png'" onclick="loadContent('menu')">
+      </div>
+      <img id="logo" src="icons/icon-64.png" height="18" width="18" style="margin: 15px 5px 0px 5px; padding: 0px">
+      <h4 style="color: #1977B1; margin: 15px 30px 5px 0px; float: right; padding: 0px">
+        TicketMiner
+      </h4>
+    </div>
+    <div id="content" style="border: 1px solid white"></div>
+  </body>
+
+</html>

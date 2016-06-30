@@ -1,0 +1,195 @@
+<script src="../lib/bootstrap-slider.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    function getHostName(url) {
+        var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+        if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+            return match[2];
+        } else {
+            return null;
+        }
+    }
+
+    $("#server").text(getHostName(String(window.request.server)));
+
+    $('[data-toggle="tooltip"]').tooltip();
+    
+    if (window.request.server.includes('wss://')) {  
+        $("#security").attr("src", "icons/secure.png");
+        $("#security").attr('data-original-title', "Connection is secure").tooltip('fixTitle');
+        $('[data-toggle="tooltip"]').tooltip();
+    } else {
+        $("#security").attr("src", "icons/not-secure.png");
+        $("#security").attr('data-original-title', "Connection is not secure").tooltip('fixTitle');
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    if (window.request.balance == 0.0) {
+        $(".panel-default").hide();
+        $("#notification").show();
+        $("#balance").css("color", "red");
+        $("#accept").hide();
+        $("#decline").hide();
+        $("#mine").show();
+        $("#cancel").show();
+    } else {
+        $(".panel-default").show();
+        $("#notification").hide();
+        $("#balance").css("color", "yellowgreen");
+        $("#accept").show();
+        $("#decline").show();
+        $("#mine").hide();
+        $("#cancel").hide();
+
+        var currency = '&#164;';
+        if (window.request.response.currency == 'EUR') {
+            currency = '&#128;';
+        } else 
+        if (window.request.response.currency == 'USD') {
+            currency = '&#36;';
+        } else 
+        if (window.request.response.currency == 'GBP') {
+            currency = '&#163;';
+        } else 
+        if (window.request.response.currency == 'CHF') {
+            currency = '&#8355;';
+        } else
+        if (window.request.response.currency == 'JPY') {
+            currency = '&#165;';
+        } 
+        
+        var value = (window.request.response.defaultAmount < window.request.balance) ? window.request.response.defaultAmount : window.request.balance;
+
+        var ticks = ticks_labels = null;
+        if (window.request.balance >= 0.04) {
+            ticks = [
+                0.01, 
+                (window.request.balance * 1/3).toFixed(2), 
+                (window.request.balance * 2/3).toFixed(2),
+                window.request.balance.toFixed(2)
+            ];
+            ticks_labels = [
+                '0.01'+currency,
+                (window.request.balance * 1/3).toFixed(2)+currency,
+                (window.request.balance * 2/3).toFixed(2)+currency,
+                window.request.balance.toFixed(2)+currency
+            ];
+        } else 
+        if (window.request.balance == 0.03) {
+            ticks = [0.01, 0.02, 0.03];
+            ticks_labels = ['0.01'+currency, '0.02'+currency, '0.3'+currency];
+        } else {
+            ticks = [0.01, window.request.balance];
+            ticks_labels = ['0.01'+currency, window.request.balance.toFixed(2)+currency];
+        }
+        
+        $("#amount").slider({
+            step              : 0.01,
+            precision         : 2,
+            value             : value,
+            ticks             : ticks,
+            ticks_labels      : ticks_labels,
+            ticks_snap_bounds : 0
+        });
+    }
+
+    $("#balance").text(window.request.balance.toFixed(2)+" "+window.request.currency);
+
+    $("#accept").click(function() {
+        var amount = $("#amount").val();
+        if (amount == window.request.balance.toFixed(2)) {
+            amount = window.request.balance;
+        }
+        window.postMessage(JSON.stringify({ command : 'donation-response', data : { response : 'accept', amount : amount } }), "*");
+    });
+
+    $("#decline").click(function() {
+        window.postMessage(JSON.stringify({ command : 'donation-response', data : { response : 'decline' } }), "*");
+    });
+
+    $("#mine").click(function() {
+      window.postMessage(JSON.stringify({ command : 'donation-response', data : { response : 'mine' } }), "*");
+    });
+
+    $("#cancel").click(function() {
+      window.postMessage(JSON.stringify({ command : 'donation-response', data : { response : 'cancel' } }), "*");
+    });
+</script>
+
+<table style="width: 100%; margin-top: 0px">
+    <tr>
+        <td colspan="2" style="font-size: 9pt">
+            <small style="margin: 0px 5px 0px 10px; font-weight: bold">
+                Server:
+            </small>
+            <small><span id="server" style="font-style: italic">localhost</span></small>
+            <img id="security" src="icons/not-secure.png" height="10" width="10" style="cursor: pointer" data-toggle="tooltip" title="Connection is not secure">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding: 5px 5px 2px 5px">
+            <div class="panel panel-default" style="margin: 0px">
+                <!-- Default panel contents -->
+                <div class="panel-heading" style="font-size: 8pt; font-weight: bold; height: 24px; padding: 4px 10px">
+                    Donation
+                </div>
+                <div class="panel-body" style="font-size: 8pt; height: 75px; padding: 5px 10px">
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="padding: 0px 0px 5px 0px">
+                                Amount:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 5px">
+                                <input id="amount" style="font-size: 8pt; width: 130px" type="text" data-slider-ticks-snap-bounds="0" data-slider-ticks="[]" data-slider-ticks-labels="[]"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td id="notification" colspan="2" style="padding: 0px 5px 10px 5px; font-size: 7pt">
+            <div class="alert alert-danger" style="padding: 10px; margin: 0px" role="alert">
+                You don't have enough balance to make a donation! Do you want to start mining instead?
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="font-size: 9pt">
+            <small style="margin: 0px 5px 0px 10px; font-weight: bold">
+                Your Balance:
+            </small>
+            <small>
+                <span id="balance" style="float: right; padding-right: 10px">
+                    0.00
+                </span>
+            </small>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="text-align: center">
+                <button id="accept" type="button" class="btn btn-primary btn-xs" style="width: 60px; margin-top: 5px">
+                    Donate
+                </button>
+                <button id="decline" type="button" class="btn btn-xs" style="width: 60px; margin-top: 5px">
+                    Cancel
+                </button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="text-align: center">
+                <button id="mine" type="button" class="btn btn-primary btn-xs" style="width: 60px; margin-top: 30px">
+                    Mine
+                </button>
+                <button id="cancel" type="button" class="btn btn-xs" style="width: 60px; margin-top: 30px">
+                    Cancel
+                </button>
+            </div>
+        </td>
+    </tr>
+</table>

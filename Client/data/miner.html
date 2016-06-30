@@ -1,0 +1,102 @@
+<script src="../lib/bootstrap-slider.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $("#back-button").attr('onclick', '').click(function(){loadContent('menu')});
+
+    if (window.server == null) {
+        $("#unavailable").show();
+        $("#miner").hide();
+    } else {
+        $("#unavailable").hide();
+        $("#miner").show();
+    }
+
+    function getHostName(url) {
+        var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+        if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+            return match[2];
+        } else {
+            return null;
+        }
+    }
+
+    $("#server").text(getHostName(String(window.server)));
+
+    $('[data-toggle="tooltip"]').tooltip();
+    
+    if (window.server.includes('wss://')) {  
+        $("#security").attr("src", "icons/secure.png");
+        $("#security").attr('data-original-title', "Connection is secure").tooltip('fixTitle');
+        $('[data-toggle="tooltip"]').tooltip();
+    } else {
+        $("#security").attr("src", "icons/not-secure.png");
+        $("#security").attr('data-original-title', "Connection is not secure").tooltip('fixTitle');
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    window.threads = 1;
+
+    $("#threads").on("slide", function(event) {
+		$("#slider-value").text(event.value);
+        window.threads = event.value;
+	});
+
+    $("#threads").on("change", function(event) {
+        var value = $('#threads').val();
+        $("#slider-value").text(value);
+        if (value == 0) {
+            $("#button").prop('disabled', true);
+        } else {
+            $("#button").prop('disabled', false);
+        }
+        window.threads = value;
+    });
+
+    $("#button").click(function() {
+        window.postMessage(JSON.stringify({ command : 'start-miner', data : { server : window.server, threads : window.threads, donate : ($("input[type='radio'][name='donate']:checked").val() === "true") } }), "*");
+    });
+</script>
+<div id="unavailable" style="width: 100%; margin-top: 10px; padding: 10px">
+    <div style="text-align: center; padding: 5px">
+        <img src="icons/warning.png" width="38px" height="38px">
+    </div>
+    <div class="alert alert-info" role="alert" style="text-align: center; padding: 10px; font-size: 8pt">
+        There is no mining service running on this website!
+    </div>
+</div>
+<table id="miner" style="width: 100%; margin-top: 10px">
+    <tr>
+        <td style="padding: 5px">
+            <div class="panel panel-default" style="margin: 0px">
+                <!-- Default panel contents -->
+                <div class="panel-heading" style="font-size: 8pt; font-weight: bold; height: 24px; padding: 4px 10px">
+                    Miner
+                </div>
+                <div class="panel-body" style="font-size: 9pt; height: 92px; padding: 5px">
+                    <small style="margin: 0px 5px 0px 5px; font-weight: bold">
+                        Server:
+                    </small>
+                    <small><span id="server" style="font-style: italic">localhost</span></small>
+                    <img id="security" src="icons/not-secure.png" height="10" width="10" style="cursor: pointer" data-toggle="tooltip" title="Connection is not secure">
+                    <br/>
+                    <small style="margin: 5px 0px 0px 5px; font-weight: bold">
+                        Threads:
+                    </small>
+                    <div style="height: 5px"></div>
+                    <span style="padding-left: 10px"><input id="threads" type="text" name="threads" data-provide="slider" data-slider-min="0" data-slider-max="4" data-slider-step="1" data-slider-value="1" data-slider-tooltip="show" style="width: 110px">
+                    <span id="slider-value" class="badge" style="margin-left: 10px">1</span></span>
+                    <div style="height: 5px"></div>
+                    <span style="font-size: 8pt; margin: 0px 0px 0px 10px"><input type="radio" name="donate" value="true" checked> Donation&nbsp;&nbsp;<input type="radio" name="donate" value="false"> Mine Tickets</span>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div style="text-align: center">
+                <button id="button" type="button" class="btn btn-primary btn-xs" style="width: 100px; margin: 5px">
+                    Start Mining
+                </button>
+            </div>
+        <td>
+    </tr>			
+</table>

@@ -1,0 +1,75 @@
+{
+  "title": "TicketMiner",
+  "name": "ticketminer",
+  "version": "0.0.1",
+  "icon": "resource://@ticketminer/data/icons/icon-32.png",
+  "description": "TicketMiner is a JavaScript based and multi-threaded cryptocurrency miner for the browser, allowing users to mine tickets at dedicated websites where users can redeem their tickets for special services.",
+  "main": "main.js",
+  "author": "Christof Torres",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "preferences": [
+  {
+    "name": "notifications",
+    "title": "Show notifications",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "activeTabMining",
+    "title": "Mine only while on website",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "ethashClient",
+    "type": "radio",
+    "title": "Ethash Client",
+    "value": "light",
+    "options": [
+        {
+            "value": "full",
+            "label": "Full"
+        },
+        {
+            "value": "light",
+            "label": "Light"
+        }
+    ]
+  },
+  {
+    "name": "currency",
+    "title": "Preferred currency",
+    "type": "menulist",
+    "value": "EUR",
+    "options": [
+        {
+            "value": "EUR",
+            "label": "Euro"
+        },
+        {
+            "value": "USD",
+            "label": "US Dollar"
+        },
+        {
+            "value": "GBP",
+            "label": "British Pound"
+        },
+        {
+            "value": "CHF",
+            "label": "Swiss Franc"
+        },
+        {
+            "value": "JPY",
+            "label": "Japanese Yen" 
+        }
+    ]
+  }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "mining", "mirco-payments", "payments", "bitcoin", "tickets"
+  ]
+}

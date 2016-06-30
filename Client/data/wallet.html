@@ -1,0 +1,102 @@
+<script type="text/javascript">
+	function showTickets(origin) {
+		$("#back-button").attr('onclick', '').click(function(){loadContent('wallet')});
+		$("#title").text("Tickets");
+		$("#balance-container").hide();
+        $("#balance").empty();
+        $("#tickets").empty();
+        window.currentOrigin = origin;
+        $("#tickets").html('<div style="font-size: x-small; margin-top: 2px"><b>Website</b>: <i>'+window.currentOrigin+'</i></div>');
+        var $list_group = $("<div>", {class: "list-group", style: "margin: 5px"});
+        var tickets = window.origins[origin].tickets.sort(function compare(a, b) {
+		    if (a.info.expiration < b.info.expiration)
+		       return -1;
+		    if (a.info.expiration > b.info.expiration)
+		      return 1;
+		    return 0;
+		});
+        for (var index in tickets) {
+        	var ticket  = tickets[index];
+			var created = new Date(ticket.info.timestamp * 1000);
+			var expires = new Date(ticket.info.expiration * 1000);	
+			$list_group.append('<table style="font-size: xx-small; text-align: left; padding: 5px" class="list-group-item">'+
+				'<tr><td rowspan="3"><img src="icons/ticket-100.png" height="20" width="20" style="margin: 0px 10px 0px 5px"></td><td id="label1" style="width: 40px"><b>Amount:&nbsp;</b></td><td id="text1" style="width: 75px">'+ticket.info.value.toFixed(5)+' '+window.preferences.currency+'</td></tr>'+
+				'<tr><td id="label2"><b>Created:&nbsp;</b></td><td id="text2">'+created.toUTCString().split(', ')[1].split('00:00:00')[0]+'</td></tr>'+
+				'<tr><td id="label3"><b>Expires:&nbsp;</b></td><td id="text3" style="color: gray; font-weight : bold">'+expires.toUTCString().split(', ')[1].split('00:00:00')[0]+'</td></tr>'+
+				'</table>');
+        }
+        $("#tickets").append($list_group);
+        var $label = $("<div>", {class: "small", style: "text-align: center; color: gray"});
+		if (tickets.length == 1) {	
+			$label.text("1 Ticket");
+		} else {
+			$label.text(tickets.length+" Tickets");
+		}
+		$("#tickets").append($label);
+		$('[data-toggle="tooltip"]').tooltip();
+    }
+	function listTickets() {
+		$("#back-button").attr('onclick', '').click(function(){loadContent('menu')});
+		if (window.tickets.length == 0) {
+			$("#balance").text("0.00 "+window.preferences.currency);
+			$("#tickets").text("No tickets");
+		} else {
+			var $list_group = $("<div>", {class: "list-group", style: "margin: 5px"});
+			var balance = 0.0;
+			window.origins = {};
+			for (var index in window.tickets) {
+				var ticket = window.tickets[index];
+				if (Date.now() <= (ticket.info.expiration * 1000)) {
+					var origin = null;
+					origin = window.origins[getHostName(ticket.origin)];
+					if (origin == null) origin = {tickets:[], amount:0.0}; 
+					origin.tickets.push(ticket);
+					origin.amount += parseFloat(ticket.info.value);
+					window.origins[getHostName(ticket.origin)] = origin;
+				} else {
+					window.postMessage(JSON.stringify({ command : 'delete-ticket', data : { ticket : ticket } }), "*"); 
+				}
+			}	
+			for (var origin in window.origins) {
+				$list_group.append('<table style="font-size: xx-small; text-align: left; padding: 5px; cursor: pointer" onmouseover="this.style.backgroundColor=\'#EEEEEE\'" onmouseout="this.style.backgroundColor=\'white\'" onclick="showTickets(\''+origin+'\')" class="list-group-item">'+
+						'<tr><td rowspan="3"><img src="icons/tickets-100.png" height="25" width="25" style="margin-right: 5px"></td><td id="label1" style="width: 40px"><b>Website:&nbsp;</b></td><td id="text1" style="width: 62px; font-style: italic">'+origin+'</td><td rowspan="3" style="font-size: small"><span class="glyphicon glyphicon-menu-right" style="padding-left: 2px"></span></td></tr>'+
+						'<tr><td id="label2"><b>Tickets:&nbsp;</b></td><td id="text2">'+window.origins[origin].tickets.length+' '+((origins[origin].tickets.length == 1) ? 'Ticket' : 'Tickets')+'</td></tr>'+
+						'<tr><td id="label3"><b>Balance:&nbsp;</b></td><td id="text3">'+window.origins[origin].amount.toFixed(5)+" "+window.preferences.currency+'</td></tr>'+
+						'</table>');
+				balance += parseFloat(window.origins[origin].amount);
+			}
+			$("#balance").text(balance.toFixed(5)+" "+window.preferences.currency);
+			$("#tickets").html($list_group);
+			var $label = $("<div>", {class: "small", style: "text-align: center; color: gray"});
+			if (window.tickets.length == 1) {	
+				$label.text("1 Ticket");
+			} else {
+				$label.text(window.tickets.length+" Tickets");
+			}
+			$("#tickets").append($label);
+			$('[data-toggle="tooltip"]').tooltip();
+		}
+	}
+	function getHostName(url) {
+		var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+	  	if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+	    	return match[2];
+	  	} else {
+	    	return null;
+	  	}
+	}
+	listTickets();
+</script>
+<div style="width: 100%">
+    <div id="title" style="text-align: center; color: gray">
+        Wallet
+    </div>
+    <div  id="balance-container" style="font-size: 8pt; text-align: center; margin: 5px">
+        <ul class="list-group" style="margin: 0px">
+            <li class="list-group-item" style="font-size: 8pt; padding: 5px">
+                Total Balance: <span id="balance" style=" font-weight: bold"></span>
+            </li>
+        </ul>
+    </div>
+    <div id="tickets" class="small" style="text-align: center"></div>
+</div>

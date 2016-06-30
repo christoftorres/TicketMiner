@@ -1,0 +1,147 @@
+<script type="text/javascript">
+    function getHostName(url) {
+        var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+        if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+            return match[2];
+        } else {
+            return null;
+        }
+    }
+
+	$("#server").text(getHostName(String(window.request.server)));
+    
+    $('[data-toggle="tooltip"]').tooltip();
+
+    if (window.request.server.includes('wss://')) {  
+        $("#security").attr("src", "icons/secure.png");
+        $("#security").attr('data-original-title', "Connection is secure").tooltip('fixTitle');
+        $('[data-toggle="tooltip"]').tooltip();
+    } else {
+        $("#security").attr("src", "icons/not-secure.png");
+        $("#security").attr('data-original-title', "Connection is not secure").tooltip('fixTitle');
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    if (window.request.balance < window.request.response.price) {
+        $(".panel-heading").hide();
+        $(".panel-body").hide();
+        $("#balance").css("color", "red");
+        $("#notification").show();
+        $("#accept").hide();
+        $("#decline").hide();
+        $("#mine").show();
+        $("#cancel").show();
+    } else {
+        $(".panel-heading").show();
+        $(".panel-body").show();
+        $("#balance").css("color", "yellowgreen");
+        $("#notification").hide();
+        $("#accept").show();
+        $("#decline").show();
+        $("#mine").hide();
+        $("#cancel").hide();
+    }
+
+    if (window.request.response.description.length > 55) {
+        $("#description").text(window.request.response.description.substring(0, 52)+"...");
+    } else {
+        $("#description").text(window.request.response.description);
+    }
+    
+    $("#price").text(window.request.response.price.toFixed(2)+" "+window.request.response.currency);
+
+    $("#balance").text(window.request.balance.toFixed(2)+" "+window.request.currency);
+
+	$("#accept").click(function() {
+      window.postMessage(JSON.stringify({ command : 'purchase-response', data : { response : 'accept' } }), "*");
+    });
+
+    $("#decline").click(function() {
+      window.postMessage(JSON.stringify({ command : 'purchase-response', data : { response : 'cancel' } }), "*");
+    });
+
+    $("#mine").click(function() {
+      window.postMessage(JSON.stringify({ command : 'purchase-response', data : { response : 'mine' } }), "*");
+    });
+
+    $("#cancel").click(function() {
+      window.postMessage(JSON.stringify({ command : 'purchase-response', data : { response : 'cancel' } }), "*");
+    });
+</script>
+
+<table style="width: 100%; margin-top: 0px">
+    <tr>
+        <td colspan="2" style="font-size: 9pt">
+            <small style="margin: 0px 5px 0px 10px; font-weight: bold">
+                Server:
+            </small>
+            <small><span id="server" style="font-style: italic">localhost</span></small>
+            <img id="security" src="icons/not-secure.png" height="10" width="10" style="cursor: pointer" data-toggle="tooltip" title="Connection is not secure">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding: 5px">
+            <div class="panel panel-default" style="margin: 0px">
+                <!-- Default panel contents -->
+                <div class="panel-heading" style="font-size: 8pt; font-weight: bold; height: 24px; padding: 4px 10px">
+                    Item Description
+                </div>
+                <div class="panel-body" style="font-size: 8pt; height: 40px; padding: 5px 10px">
+                    <p id="description">...</p>
+                </div>
+                <!-- List group -->
+                <ul class="list-group">
+                    <li class="list-group-item" style="font-size: 8pt; padding: 5px 10px">
+                        Price:
+                        <span id="price" style="float: right">
+                            0.00
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="font-size: 9pt">
+            <small style="margin: 0px 5px 0px 10px; font-weight: bold">
+                Your Balance:
+            </small>
+            <small>
+                <span id="balance" style="float: right; padding-right: 17px">
+                    0.00
+                </span>
+            </small>
+        </td>
+    </tr>
+    <tr>
+        <td id="notification" colspan="2" style="padding: 5px 5px 0px 5px; font-size: 7pt">
+            <div class="alert alert-danger" style="padding: 10px; margin: 0px" role="alert">
+                You don't have enough balance to purchase this item! Do you want to start mining instead?
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="text-align: center">
+                <button id="accept" type="button" class="btn btn-primary btn-xs" style="width: 60px; margin-top: 10px">
+                    Pay
+                </button>
+                <button id="decline" type="button" class="btn btn-xs" style="width: 60px; margin-top: 10px">
+                    Cancel
+                </button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="text-align: center">
+                <button id="mine" type="button" class="btn btn-primary btn-xs" style="width: 60px; margin-top: 8px">
+                    Mine
+                </button>
+                <button id="cancel" type="button" class="btn btn-xs" style="width: 60px; margin-top: 8px">
+                    Cancel
+                </button>
+            </div>
+        </td>
+    </tr>
+</table>
