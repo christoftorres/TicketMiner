@@ -25,7 +25,7 @@ Compile the source and install the plugin
 -----------------------------------------
 
 In order to "compile" the source code to a Mozilla Firefox add-on,
-you only need to run the following command inside the console:
+you only need to navigate inside the console to the source folder of the add-on and run the following command:
 
 	jpm xpi
 
@@ -36,18 +36,18 @@ jpm is distributed with the node package manager npm.
 
 There are two ways to get npm:
 
-	1. Download and install Node.js from [nodejs.org](https://nodejs.org/en/). Node.js includes npm.
-	2. Or, if you have a package manager like APT, install npm via that. For example, in an Ubuntu or Debian terminal window, enter:
+1. Download and install Node.js from [nodejs.org](https://nodejs.org/en/). Node.js includes npm.
+2. Or, if you have a package manager like APT, install npm via that. For example, in an Ubuntu or Debian terminal window, enter:
 
-		sudo apt-get install nodejs nodejs-legacy npm
+	sudo apt-get install nodejs nodejs-legacy npm
 
 After you have npm installed, install jpm just as you would install any other npm package:
 
 	npm install jpm --global
 
-Finally, to install the compiled add-on, just drag and drop the XPI
-file into the Mozilla Firefox browser. A popup window will appear asking your approval to install. Click "Install" and you are done. Enjoy!
+Finally, in order to install the compiled add-on, just drag and drop the XPI
+file into the Mozilla Firefox browser. A popup window will appear, asking your approval to install. Click "Install" and you are done. Enjoy!
 
 Install the plugin directly from the builds
 -------------------------------------------
-To install the plugin directly from the builds, just drag and drop the already pre-compiled XPI file contained inside the "builds" folder into the Mozilla Firefox browser. A popup window will appear asking your approval to install. Click "Install" and enjoy!
+To install the plugin directly from the builds, just drag and drop a version of an already pre-compiled XPI file contained inside the "builds" folder into the Mozilla Firefox browser. A popup window will appear, asking your approval to install. Click "Install" and enjoy!
