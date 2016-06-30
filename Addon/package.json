@@ -3,7 +3,7 @@
   "name": "ticketminer",
   "version": "0.0.1",
   "icon": "resource://@ticketminer/data/icons/icon-32.png",
-  "description": "TicketMiner is a JavaScript based and multi-threaded cryptocurrency miner for the browser, allowing users to mine tickets at dedicated websites where users can redeem their tickets for special services.",
+  "description": "TicketMiner is a proof-of-concept and JavaScript based multi-threaded cryptocurrency miner for Mozilla Firefox, allowing users to mine tickets at dedicated websites where they can later on redeem these tickets for improved services.",
   "main": "main.js",
   "author": "Christof Torres",
   "engines": {
