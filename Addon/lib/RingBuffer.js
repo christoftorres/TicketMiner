@@ -27,7 +27,7 @@ RingBuffer.prototype.append = function(x) {
     }
 };
 
-/* Computes the average of the items contained in the RingBuffer */
+/* Computes the average of the items contained inside the RingBuffer */
 RingBuffer.prototype.avg = function() {
     if (data.length === 0) return 0.0;
     var sum = this.data.reduce(function(a, b) { return a + b });
@@ -39,7 +39,7 @@ RingBuffer.prototype.size = function() {
     return this.isFull ? this.maxSize : this.cursor;
 };
 
-/* Clears the items contained in the RingBuffer */
+/* Removes all the items contained inside the RingBuffer */
 RingBuffer.prototype.clear = function() {
     this.maxSize = 0;
     this.data    = [];
