@@ -18,7 +18,7 @@ Two diffetent test cases are provided:
 Donations
 ---------
 
-This test case illustrates how the TicketMiner service could easily provide a new way of donating money to websites such as Wikipedia. This test case includes therefore the four official Wikipedia donation dialogs as of 2015 and 2016, slightly addapted to accept TicketMiner donations. The four official Wikipedia donation dialogs are:
+This test case illustrates how the TicketMiner service could easily provide a new way of donating money to websites such as Wikipedia. This test case includes therefore the four official Wikipedia donation dialogs as of 2015 and 2016 [Fundraising ideas](https://meta.wikimedia.org/wiki/Fundraising/2015-16_Fundraising_ideas), slightly addapted to accept TicketMiner donations. The four official Wikipedia donation dialogs are:
 
 * Large coffee
 * Large lightbulb
