@@ -28,7 +28,7 @@ This test case illustrates how the TicketMiner service could easily provide a ne
 E-commerce
 ----------
 
-This test case illustrates how the TicketMiner service could easily be used for micro-payments on e-commerce websites. The test case website permits a user to choose and buy four different pictures online. By clicking on the "Buy now!" button, the user will initialize the payment process by submitting his mined tickets to the server, and on success, the watermark-free and full resolution picture will be downloaded from the e-commerce website to the local downloads folder of the user.
+This test case illustrates how the TicketMiner service could easily be used for micro-payments on e-commerce websites. The test case website permits a user to choose and buy four different pictures online. By clicking on the "Buy now!" button, the user will initialize the payment process by submitting his mined tickets to the server, and on success, the watermark-free and full resolution picture will be downloaded from the e-commerce website to the local downloads directory on the user's computer.
 
 Installation instructions
 =========================
