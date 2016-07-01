@@ -1,0 +1,26 @@
+{
+  "name": "ticketminer-server",
+  "version": "0.0.1",
+  "description": "TicketMiner Server is a proof-of-concept, that acts as a proxy between TicketMiner clients and a mining pool. It coordinates all the communication between client and mining pool, in addition it provides improved services to clients in exchange for mined tickets.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christof Torres",
+  "license": "MIT",
+  "dependencies": {
+    "bignum": "^0.12.0",
+    "cheerio": "^0.20.0",
+    "ethashjs": "0.0.7",
+    "httpdispatcher": "^1.0.0",
+    "jsonfile": "^2.3.1",
+    "levelup": "^1.3.2",
+    "memdown": "^1.2.0",
+    "moment": "^2.12.0",
+    "node-jsbn": "^0.1.1",
+    "node-uuid": "^1.4.7",
+    "request": "^2.72.0",
+    "./lib/unomp-multi-hashing": "1.0.0", 
+    "websocket": "^1.0.22"
+  }
+}

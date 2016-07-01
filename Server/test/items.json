@@ -1,0 +1,26 @@
+[
+	{
+		"itemID"      : 100,
+		"description" : "A decorative background wallpaper with colorful waves and bubbles.",
+		"price"       : 0.05,
+		"file"        : "decoration-1484396_1920.jpg"
+	},
+	{
+		"itemID"      : 101,
+		"description" : "A picture of stones with a stone in the center shapped like a heart.",
+		"price"       : 0.02,
+		"file"        : "heart-1483383_1920.jpg"
+	},
+	{
+		"itemID"      : 102,
+		"description" : "A picture of a Euro 2016 football laying at the corner of a football field.",
+		"price"       : 0.03,
+		"file"        : "football-1419954_1920.jpg"
+	},
+	{
+		"itemID"      : 103,
+		"description" : "A picture taken by Diego Torres at the Seven Sisters reefs in England.",
+		"price"       : 0.10,
+		"file"        : "seven-sisters-1462388_1920.jpg"
+	}
+]

@@ -1,0 +1,106 @@
+{
+  "host"     : "localhost",
+  "port"     : 8443,
+  "currency" : "EUR",
+  "ticket_expiration" : 14,
+  "schnorr_password"  : "this is a password",
+  "donations" : {
+  	"minimum_amount" : 0.01,
+  	"default_amount" : 0.10
+  },
+  "conversion_rate_poll_time" : 60000,
+  "most_profitable_coin_poll_time" : 60000, 
+  "ssl"      : {
+  		"key"         : "certificate/server.key.pem",
+  		"certificate" : "certificate/server.cert.pem"
+  },
+  "coins"    : [
+  	{
+  		"coin_name"          : "Bitcoin",
+	  	"coin_symbol"        : "BTC",
+	  	"pool_fee"           : 0,
+	  	"pool"               : {
+	  		"host"               : "btc.give-me-coins.com",
+	  		"port"               : 3335,
+	  		"username"           : "ctorres.1",
+	  		"password"           : "x",
+	  		"algorithm"          : "sha256",
+	  		"reversed_endiannes" : false
+	  	}
+	},
+  	{
+	  	"coin_name"          : "Litecoin",
+	  	"coin_symbol"        : "LTC",
+	  	"pool_fee"           : 0,
+	  	"pool"               : {
+		  	"host"               : "ltc-eu.give-me-coins.com",
+		  	"port"               : 3333,
+		  	"username"           : "ctorres.1",
+		  	"password"           : "x",
+		  	"algorithm"          : "scrypt",
+		  	"reversed_endiannes" : false
+		}
+	},
+	{
+  		"coin_name"          : "Peercoin",
+	  	"coin_symbol"        : "PPC",
+	  	"pool_fee"           : 1,
+	  	"pool"               : {
+	  		"host"               : "ppc.give-me-coins.com",
+	  		"port"               : 3338,
+	  		"username"           : "ctorres.1",
+	  		"password"           : "x",
+	  		"algorithm"          : "sha256",
+	  		"reversed_endiannes" : false
+	  	}
+	},
+	{
+		"coin_name"          : "Feathercoin",
+	  	"coin_symbol"        : "FTC",
+	  	"pool_fee"           : 1,
+	  	"pool"               : {
+			"host"               : "ftc-neo.give-me-coins.com",
+	  		"port"               : 3336,
+	  		"username"           : "ctorres.1",
+	  		"password"           : "x",
+	  		"algorithm"          : "neoscrypt",
+	  		"reversed_endiannes" : true
+	  	}
+	},
+	{
+		"coin_name"          : "Ethereum",
+	  	"coin_symbol"        : "ETH",
+	  	"pool_fee"           : 1,
+	  	"pool"               : {
+			"host"               : "eu1.ethpool.org",
+	  		"port"               : 3333,
+	  		"username"           : "0x4bb96091ee9d802ed039c4d1a5f6216f90f81b01.rig1",
+	  		"password"           : "",
+	  		"algorithm"          : "ethash",
+	  		"reversed_endiannes" : false 
+	  	}
+	}
+  ],
+  "hashrates" : [
+  	{
+  		"algorithm"        : "sha256",
+  		"default_hashrate" : 4730.00,
+	  	"hashrate_unit"    : "GH/s"
+	},
+	{
+  		"algorithm"        : "scrypt",
+  		"default_hashrate" : 110000.00,
+	  	"hashrate_unit"    : "KH/s"
+	},
+	{
+  		"algorithm"        : "neoscrypt",
+  		"default_hashrate" : 400.00,
+	  	"hashrate_unit"    : "KH/s"
+	},
+	{
+  		"algorithm"        : "ethash",
+  		"default_hashrate" : 75.00,
+	  	"hashrate_unit"    : "MH/s"
+	}
+  ]
+}
