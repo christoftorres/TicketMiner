@@ -25,11 +25,11 @@ After you have Node.js and npm installed, you need to first compile and install 
 
 	npm install ./lib/unomp-multi-hashing
 
-Afterwards, you need to install all the necessary dependencies. You can once again use npm for that, just run the following command inside the console from the "Server" directory containing the __package.json__ file:
+Afterwards, you need to install all the necessary dependencies. You can once again use npm for that, just run the following command inside the console from the "Server" directory containing the _package.json_ file:
 
 	npm install
 
-Finally, you still need to change the default configuration of the server before running it. Open the config.json file and modify the **host** field with your servers hostname or IP address and the also modify the **port** field with the port number where you want to make your service available to the public.
+Finally, you still need to change the default configuration of the server before running it. Open the config.json file and modify the ***host*** field with your servers hostname or IP address and the also modify the ***port*** field with the port number where you want to make your service available to the public.
 
 Running instructions
 ====================
@@ -37,12 +37,12 @@ If you just want to test if the software works, just run this node command insid
 
 	node server.js
 
-**Note**: Running a Node.js application in this manner will block additional commands until the application is killed by pressing __CTRL+C__.
+**Note**: Running a Node.js application in this manner will block additional commands until the application is killed by pressing _CTRL+C_.
 
 If you want to run the application in a production environment, you will need to install PM2, which is a process manager for Node.js applications. PM2 provides an easy way to manage and daemonize applications (run them as a service), so they will automatically restart on reboot or failure. Use this command to install PM2:
 
 	sudo npm install pm2 -g
 
-Finally, you can use the pm2 start command to run the Node.js application, server.js, in the background:
+Finally, you can use the pm2 start command to run the Node.js application, _server.js_, in the background:
 
 	pm2 start server.js
