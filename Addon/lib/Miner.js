@@ -661,7 +661,7 @@ Miner.prototype._calculateTarget = function(difficulty) {
     }
 }
 
-// Add zero padding to number given a certain length
+// Add zero padding to a number given a certain length
 Miner.prototype._zeropad = function(num, length) {
     return (Array(length).join('0') + num).slice(length*-1);
 }
