@@ -735,8 +735,14 @@ body.rtl .frbanner-nag-close {
                                 </button>
                             </li>
 
-                            
-							<span style="text-align: center; margin-left: 85px">or</span>
+
+                        </ul>
+                    </fieldset>
+
+                    <fieldset class="frbanner-submit cf">
+                        <legend>Select a payment method</legend>
+                        
+                        <ul>
                             
 
                             <li>
@@ -745,13 +751,6 @@ body.rtl .frbanner-nag-close {
                                 </button>
                             </li>
 
-                            
-
-                            
-
-                            
-
-                            
 
                         </ul>
                     </fieldset>
