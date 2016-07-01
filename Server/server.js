@@ -44,9 +44,14 @@ var tickets     = [];
 var items       = [];
 
 // Load the list of already spent tickets
-if (jsonfile.readFileSync('tickets.json') != null) {
-  tickets = jsonfile.readFileSync('tickets.json');
-}
+fs.stat('tickets.json', function(err, stat) {
+  if (err == null) {
+      tickets = jsonfile.readFileSync('tickets.json');
+  } else if (err.code == 'ENOENT') {
+      // File does not exist
+      fs.writeFile('tickets.json', '[]');
+  }
+});
 
 // Load the database of items (solely fot testing purposes)
 if (jsonfile.readFileSync('test/items.json') != null) {
@@ -68,11 +73,11 @@ var keypair = schnorr.GenerateSchnorrKeypair(config.schnorr_password);
 
 /* Create an https server in order to handle http requests (Frontend) */
 var httpsServer = https.createServer(SSL_OPTIONS, function(request, response) {
-    try {
-      dispatcher.dispatch(request, response);
-    } catch(err) {
-      logHTTP("Error: "+err);
-    }
+  try {
+    dispatcher.dispatch(request, response);
+  } catch(err) {
+    logHTTP("Error: "+err);
+  }
 });
 
 httpsServer.listen(PORT, function() {

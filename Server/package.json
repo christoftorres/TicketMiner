@@ -20,7 +20,6 @@
     "node-jsbn": "^0.1.1",
     "node-uuid": "^1.4.7",
     "request": "^2.72.0",
-    "./lib/unomp-multi-hashing": "1.0.0", 
     "websocket": "^1.0.22"
   }
 }
