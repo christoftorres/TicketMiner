@@ -1,5 +1,5 @@
 #TicketMiner Addon
-Copyright (C) 2016 - Christof Torres
+Copyright (C) 2016 - Christof Torres, University of Luxembourg
 
 License/usage:
 =========================

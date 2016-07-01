@@ -1,5 +1,5 @@
-# TicketMiner Test Cases
-Copyright (C) 2016 - Christof Torres
+#TicketMiner Test Cases
+Copyright (C) 2016 - Christof Torres, University of Luxembourg
 
 License/usage:
 =========================
@@ -10,7 +10,7 @@ either expressed or implied.
 
 About
 =========================
-Two diffetent test cases are provided:
+Two different test cases are provided:
 
 1. Donations
 2. E-commerce
