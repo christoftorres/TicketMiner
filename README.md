@@ -14,9 +14,9 @@ This is a Master project founded by the [CryptoLUX research team](https://www.cr
 
 TicketMiner is a proof-of-concept based on the paper ["Proof-of-Work as Anonymous Micropayment: Rewarding a Tor Relay" [1]](https://www.cryptolux.org/images/3/3e/Alex-ivan-tor-micropayments.pdf) by Prof. Dr. Alex Biryukov and Dr. Ivan Pustogarov, allowing users to mine shares for websites and getting back in return tickets which they can either redeem for improved services or donate back to websites.
 
-TicketMiner is composed of a server application running on the website wishing to provide improved services or receive donations by TicketMiner clients. A TicketMiner client is a Mozilla Firefox add-on running inside the Firefox browser and mining tickets from TicketMiner enabled websites.
+TicketMiner is composed of a server application running on the website wishing to provide improved services or receive donations by TicketMiner clients. A TicketMiner client is a Mozilla Firefox add-on that runs inside the Firefox browser and mines tickets from TicketMiner enabled websites.
 
-In addition, this repository also includes two test cases, illustrating two possible uses cases of TicketMiner services, namely donations and mirco-payments inside e-commerce websites.
+In addition, this repository also includes two test cases, illustrating two possible use cases of TicketMiner services, namely donations and mirco-payments inside e-commerce websites.
 
 References
 =========================
