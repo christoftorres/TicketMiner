@@ -132,14 +132,14 @@
 			var $list_group = $("<div>", {class: "list-group", style: "margin: 5px"});
 			for (var index in window.jobs) {
 				var job = window.jobs[index];
-				$list_group.append('<table id="job_'+job.id+'" style="font-size: xx-small; text-align: left; padding: 5px" class="list-group-item">'+
-						'<tr><td style="width: 35px"><b>Server:&nbsp;</b></td><td style="width: 65px; font-style: italic">'+getHostName(job.server)+'&nbsp;<img id="security" src="icons/not-secure.png" height="8" width="8"></td>'+
+				$list_group.append('<table id="job_'+job.id+'" style="font-size: xx-small; text-align: left; padding: 5px 0px 5px 5px" class="list-group-item">'+
+						'<tr><td style="width: 35px"><b>Server:&nbsp;</b></td><td style="width: 75px; font-style: italic">'+getHostName(job.server)+'&nbsp;<img id="security" src="icons/not-secure.png" height="8" width="8"></td>'+
 							'<td rowspan="3" style="font-size: small">'+
-								((job.donate) ? '<img src="icons/donate-100.png" height="16" width="16" style="padding-left: 2px; cursor: pointer" data-toggle="tooltip" title="Donation">' : '<img src="icons/tickets-100.png" height="16" width="16" style="padding-left: 2px; cursor: pointer" data-toggle="tooltip" title="Tickets">')+'</td>'+
+								((job.donate) ? '<img src="icons/donate-100.png" height="16" width="16" style="padding-left: 0px; cursor: pointer" data-toggle="tooltip" title="Donation">' : '<img src="icons/tickets-100.png" height="16" width="16" style="padding-left: 2px; cursor: pointer" data-toggle="tooltip" title="Tickets">')+'</td>'+
 							'<td rowspan="3" style="font-size: small">'+
-								'<span id="start" class="glyphicon glyphicon-play" style="padding-left: 5px; cursor: pointer" data-toggle="tooltip" title="Start" onclick="startJob('+job.id+')"></span>'+
-								'<span id="stop" class="glyphicon glyphicon-stop" style="padding-left: 5px; cursor: pointer" data-toggle="tooltip" title="Stop" onclick="stopJob('+job.id+')"></span>'+
-								'<span class="glyphicon glyphicon-menu-right" style="padding-left: 5px; cursor: pointer" onmouseover="this.parentNode.parentNode.parentNode.parentNode.style.backgroundColor=\'#EEEEEE\'" onmouseout="this.parentNode.parentNode.parentNode.parentNode.style.backgroundColor=\'white\'" onclick="showJob('+job.id+')"></span></td></tr>'+
+								'<span id="start" class="glyphicon glyphicon-play" style="padding-left: 2px; cursor: pointer" data-toggle="tooltip" title="Start" onclick="startJob('+job.id+')"></span>'+
+								'<span id="stop" class="glyphicon glyphicon-stop" style="padding-left: 2px; cursor: pointer" data-toggle="tooltip" title="Stop" onclick="stopJob('+job.id+')"></span>'+
+								'<span class="glyphicon glyphicon-menu-right" style="padding-left: 0px; cursor: pointer" onmouseover="this.parentNode.parentNode.parentNode.parentNode.style.backgroundColor=\'#EEEEEE\'" onmouseout="this.parentNode.parentNode.parentNode.parentNode.style.backgroundColor=\'white\'" onclick="showJob('+job.id+')"></span></td></tr>'+
 						'<tr><td><b>Status:&nbsp;</b></td><td id="status">'+job.status+'</td></tr>'+
 						'<tr><td><b>Speed:&nbsp;</b></td><td id="speed">'+getReadableHashRateString(job.hashRate)+'</td></tr>'+
 						'</table>');
