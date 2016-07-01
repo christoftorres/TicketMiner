@@ -123,7 +123,7 @@
 
             <div class="col-md-3 col-sm-6 hero-feature">
                 <div class="thumbnail">
-                    <img src="images/football" alt="">
+                    <img src="images/football.png" alt="">
                     <div class="caption">
                         <h3>Euro 2016 Football</h3>
                         <p>A picture of a Euro 2016 football laying at the corner of a football field.</p>
@@ -137,7 +137,7 @@
 
             <div class="col-md-3 col-sm-6 hero-feature">
                 <div class="thumbnail">
-                    <img src="images/seven_sisters" alt="">
+                    <img src="images/seven_sisters.png" alt="">
                     <div class="caption">
                         <h3>Seven Sisters</h3>
                         <p>A picture taken by Diego Torres at the Seven Sisters reefs in England.</p>
