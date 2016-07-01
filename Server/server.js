@@ -106,10 +106,10 @@ dispatcher.onGet("/", function(req, res) {
   body += '<meta charset="utf-8" />';
   body += '<meta http-equiv="refresh" content="1" />';
   body += '<title>TicketMiner Server</title>';
-  body += '<link rel="stylesheet" href="https://localhost:8443/lib/bootstrap-3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">';
+  body += '<link rel="stylesheet" href="https://'+HOST+':'+PORT+'/lib/bootstrap-3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">';
   body += '</head>';
   body += '<body>';
-  body += '<div style="text-align: center; margin-top: 20px"><img src="https://localhost:8443/lib/icons/ticketminer.png" height="24" width="24" style="margin-top: -10px"><h3 style="color: #1977B1; display: inline; margin-left: 5px">TicketMiner Server</h3></div>';
+  body += '<div style="text-align: center; margin-top: 20px"><img src="https://'+HOST+':'+PORT+'/lib/icons/ticketminer.png" height="24" width="24" style="margin-top: -10px"><h3 style="color: #1977B1; display: inline; margin-left: 5px">TicketMiner Server</h3></div>';
   body += '<table style="width: 100%; margin: 10px auto; font-size: 10pt">';
   body += '<tr>';
   body += '<td style="padding: 10px 10px 10px 20px; vertical-align: top; width: 30%">';
