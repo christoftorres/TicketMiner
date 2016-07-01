@@ -12,7 +12,11 @@ About
 =========================
 TicketMiner is a proof-of-concept and JavaScript based multi-threaded 
 cryptocurrency miner for Mozilla Firefox, allowing users to mine tickets at 
-dedicated websites where they can later on redeem these tickets for improved services.
+dedicated websites where they can later on redeem these tickets for improved services. Currently the following four mining algorithms are supported:
+* Sha256
+* Scrypt
+* NeoScrypt
+* Ethash (Full and Light client)
 
 Installation instructions
 =========================
@@ -37,7 +41,7 @@ jpm is distributed with the node package manager npm.
 There are two ways to get npm:
 
 1. Download and install Node.js from [nodejs.org](https://nodejs.org/en/). Node.js includes npm.
-2. Or, if you have a package manager like APT, install npm via that. For example, in an Ubuntu or Debian terminal window, enter: sudo apt-get install nodejs nodejs-legacy npm
+2. Or, if you have a package manager like APT, install npm via that. For example, in an Ubuntu or Debian terminal window, enter: ***sudo apt-get install nodejs nodejs-legacy npm***
 
 After you have npm installed, install jpm just as you would install any other npm package:
 
