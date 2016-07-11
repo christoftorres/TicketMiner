@@ -28,11 +28,6 @@ The TicketMiner client application is a Mozilla Firefox add-on that runs inside 
 ![Wallet](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-wallet.png?raw=true "Wallet")
 ![Miner](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-miner.png?raw=true "Miner")
 ![Job](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-job.png?raw=true "Job")
-![Jobs](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-jobs.png?raw=true "Jobs")
-![Settings](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-settings.png?raw=true "Settings")
-![Donation With Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-donation-with-balance.png?raw=true "Donation With Balance")
-![Purchase With Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-purchase-with-balance.png?raw=true "Purchase With Balance")
-
 
 Test Cases
 ----------
