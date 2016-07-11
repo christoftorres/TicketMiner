@@ -18,6 +18,11 @@ dedicated websites where they can later on redeem these tickets for improved ser
 * NeoScrypt
 * Ethash (Full and Light client)
 
+Screenshots
+-----------
+### Main Menu
+![Main Menu](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard%20.png?raw=true "Main Menu")
+
 Installation instructions
 =========================
 There are two ways to install the TicketMiner add-on:
