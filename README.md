@@ -14,30 +14,29 @@ This is a Master project founded by the [CryptoLUX research team](https://www.cr
 
 TicketMiner is a proof-of-concept based on the paper ["Proof-of-Work as Anonymous Micropayment: Rewarding a Tor Relay" [1]](https://www.cryptolux.org/images/3/3e/Alex-ivan-tor-micropayments.pdf) by Prof. Dr. Alex Biryukov and Dr. Ivan Pustogarov, allowing users to mine shares through their browser for specific websites and getting back in return tickets which they can either redeem for improved services or donate to websites.
 
-This repository contains a server application, a client application and a couple of test cases.
-
 [Server](../master/Server)
 ------
-The server application is a Node.js application and can be found inside the "Server" directory. The server run in the background on the website wishing to provide improved services or receive donations by TicketMiner clients. 
+The TicketMiner server application is a Node.js application and can be found inside the "Server" directory. The server run in the background on the website wishing to provide improved services or receive donations by TicketMiner clients. 
 
 ![Dashboard](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard.png?raw=true "Dashboard")
 
-[Client](../master/Client)
+[Client](../master/Addon)
 ------
-The client application is a Mozilla Firefox add-on that runs inside the Firefox browser and mines tickets from TicketMiner enabled websites. The client can be found inside the "Addon" directory.
+The TicketMiner client application is a Mozilla Firefox add-on that runs inside the Firefox browser and mines tickets from TicketMiner enabled websites. The client can be found inside the "Addon" directory.
 
 ![Main Menu](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-main-menu.png?raw=true "Main Menu")
 ![Wallet](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-wallet.png?raw=true "Wallet")
 ![Miner](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-miner.png?raw=true "Miner")
+![Job](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-job.png?raw=true "Job")
 ![Jobs](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-jobs.png?raw=true "Jobs")
 ![Settings](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-settings.png?raw=true "Settings")
 ![Donation With Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-donation-with-balance.png?raw=true "Donation With Balance")
 ![Purchase With Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-purchase-with-balance.png?raw=true "Purchase With Balance")
-![Job](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-job.png?raw=true "Job")
+
 
 Test Cases
 ----------
-In addition, this repository also includes two test cases, illustrating two possible use cases of TicketMiner services, namely donations and mirco-payments inside e-commerce websites.
+In addition, this project also includes two test cases, illustrating two possible use cases of TicketMiner services, namely donations and mirco-payments inside e-commerce websites.
 
 References
 =========================
