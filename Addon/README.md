@@ -21,7 +21,7 @@ dedicated websites where they can later on redeem these tickets for improved ser
 Screenshots
 -----------
 ### Main Menu
-![Main Menu](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard%20.png?raw=true "Main Menu")
+![Main Menu](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-main_menu.png?raw=true "Main Menu")
 
 Installation instructions
 =========================
