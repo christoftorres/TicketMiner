@@ -27,9 +27,24 @@ Screenshots
 ![Wallet](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-wallet.png?raw=true "Wallet")
 ![Tickets](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-tickets.png?raw=true "Tickets")
 
+### Miner
+![Miner](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-miner.png?raw=true "Miner")
+![Miner Not Available](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-miner-not-available.png?raw=true "Miner Not Available")
+
 ### Jobs
 ![Jobs](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-jobs.png?raw=true "Jobs")
 ![Job](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-job.png?raw=true "Job")
+
+### Settings
+![Settings](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-settings.png?raw=true "Settings")
+
+### Donation
+![Donation With Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-donation-with-balance.png?raw=true "Donation With Balance")
+![Donation Without Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-donation-without-balance.png?raw=true "Donation Without Balance")
+
+### Purchase
+![Purchase With Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-purchase-with-balance.png?raw=true "Purchase With Balance")
+![Purchase Without Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-purchase-without-balance.png?raw=true "Purchase Without Balance")
 
 Installation instructions
 =========================
