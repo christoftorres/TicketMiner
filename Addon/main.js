@@ -15,6 +15,8 @@ var sp               = require("sdk/simple-prefs");
 var notifications    = require("sdk/notifications");
 let { Cu, Ci, Cc }   = require('chrome');
 
+const { OS } = Cu.import("resource://gre/modules/osfile.jsm", {});
+
 // Create the local storage objects if they are non-existing
 if (!ss.storage.servers) ss.storage.servers = {};
 if (!ss.storage.tickets) ss.storage.tickets = []; 
