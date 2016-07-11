@@ -8,8 +8,11 @@
   	"minimum_amount" : 0.01,
   	"default_amount" : 0.10
   },
-  "conversion_rate_poll_time" : 60000,
+  "conversion_rate_poll_time"      : 60000,
   "most_profitable_coin_poll_time" : 60000, 
+  "coin_information_poll_time"     : 60000, 
+  "choose_most_profitable_coin"    : false,
+  "default_coin"                   : "Feathercoin", 
   "ssl"      : {
   		"key"         : "certificate/server.key.pem",
   		"certificate" : "certificate/server.cert.pem"
@@ -79,6 +82,19 @@
 	  		"algorithm"          : "ethash",
 	  		"reversed_endiannes" : false 
 	  	}
+	},
+	{
+	  	"coin_name"          : "Einsteinium",
+	  	"coin_symbol"        : "EMC2",
+	  	"pool_fee"           : 1,
+	  	"pool"               : {
+		  	"host"               : "emc2.suprnova.cc",
+		  	"port"               : 3366,
+		  	"username"           : "ctorres.1",
+		  	"password"           : "x",
+		  	"algorithm"          : "scrypt",
+		  	"reversed_endiannes" : false
+		}
 	}
   ],
   "hashrates" : [

@@ -1,7 +1,7 @@
 /** 
   -- MiningProfitablityCalculator.js -- 
   Author : Christof Torres <christof.ferreira.001@student.uni.lu>
-  Date   : June 2016
+  Date   : July 2016
 **/
 
 var request = require("request");
@@ -58,6 +58,28 @@ MiningProfitabilityCalculator.prototype.getMostProfitableCoin = function(hashrat
 			      	}
 		  		}
 		    });
+	  	}
+	});
+};
+
+// Get information such as block reward, block difficulty and conversion rate for a given coin
+MiningProfitabilityCalculator.prototype.getCoinInformation = function(coin, callback) {
+	// Create the query to connect to the coinwarz mining profitability calculator
+	var query = "http://www.coinwarz.com/cryptocurrency/coins/";
+	query += coin.coin_name;
+	// Request the query
+	request(query, function (error, response, body) {
+	  	if (!error) {
+		    var $ = cheerio.load(body);
+		    // Get the coin symbol
+		    var coin_symbol  = $("b:contains('Symbol / Tag')").parent().next().text();
+		    // Get the block reward
+		    var block_reward = $("b:contains('Block Reward')").parent().next().text().replace(/\s/g, '').replace('coins', '');
+		    // Get the block difficulty
+		    var block_difficulty = $("b:contains('"+coin.coin_name+" Difficulty')").parent().next().text();
+		    // Get the coin converstion rate to Bitcoin
+		    var coin_rate = $("a[href$='https://bittrex.com']").text();
+		    callback(block_reward, block_difficulty, coin_rate, coin);
 	  	}
 	});
 };

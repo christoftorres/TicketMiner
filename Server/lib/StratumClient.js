@@ -124,7 +124,7 @@ StratumClient.prototype.submitJob = function(uuid, share, difficulty) {
                 if (hashBigNum.gt(share_target)) {
                     break;
                 }
-                // SHare is valid, now store the share in order to prevent duplicates
+                // Share is valid, now store the share in order to prevent duplicates
                 if (!this._registerSubmit(share)) {
                     break;
                 }

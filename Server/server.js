@@ -3,7 +3,7 @@
 /** 
   -- Server.js -- 
   Author : Christof Torres <christof.ferreira.001@student.uni.lu>
-  Date   : June 2016
+  Date   : July 2016
 **/
 
 var WebSocketServer    = require('websocket').server;
@@ -12,6 +12,7 @@ var fs                 = require('fs');
 var dispatcher         = require('httpdispatcher');
 var moment             = require('moment');
 var jsonfile           = require('jsonfile');
+var cheerio            = require('cheerio');
 
 var StratumClient      = require('./lib/StratumClient');
 var WISchnorr          = require('./lib/WISchnorrServer');
@@ -65,7 +66,11 @@ var current_coin_rate        = 0.0;
 var current_coin             = null;
 var client                   = null;
 
-var hashrates = config.hashrates;
+var hashrates                = config.hashrates;
+var server_hashrates         = [];
+
+// Initialize server hashrates
+for (var i = 0; i < 10; i++) { server_hashrates.push(0.0); }
 
 /* Create a Schnorr keypair for partially blind signatures */
 var schnorr = new WISchnorr();
@@ -85,80 +90,109 @@ httpsServer.listen(PORT, function() {
 });
 
 dispatcher.setStaticDirname('');
-dispatcher.setStatic('lib/bootstrap-3.3.6');
-dispatcher.setStatic('lib/icons');
+dispatcher.setStatic('lib/dashboard');
 dispatcher.setStatic('test/items');
 
-// Show the status server page
+// Show server statistics
 dispatcher.onGet("/", function(req, res) {
-  var server_hashrate = '0.00 H/s';
-  if (current_coin) {
-    for (var i in hashrates) {
-      if (hashrates[i].algorithm == current_coin.pool.algorithm) {
-        server_hashrate = hashrates[i].default_hashrate.toFixed(2)+' '+ hashrates[i].hashrate_unit;
-        break;    
-      }
+  fs.readFile('./lib/dashboard/production/index.html', function(error, content) {
+    if (error) {
+      res.end(500);
+    } else {
+      var server_hashrate = server_hashrates[server_hashrates.length-1];
+      var i = -1;
+      var byteUnits = [ ' KHs', ' MHs', ' GHs', ' THs', ' PHs' ];
+      do {
+          server_hashrate = server_hashrate / 1024;
+          i++;
+      } while (server_hashrate > 1024);
+      server_hashrate = server_hashrate.toFixed(2) + byteUnits[i];
+      var $ = cheerio.load(content);
+      $('#clients').text(connections.length);
+      $('#hashrate').text(server_hashrate);
+      $('body').append('<script> var ctx = $("#hashRateChart"); var data = {labels: ["", "", "", "", "", "", "", "", "", ""], datasets: [{fill: true, lineTension: 0.1, backgroundColor: "rgba(75,192,192,0.4)", borderColor: "rgba(75,192,192,1)", borderCapStyle: "butt", borderDash: [], borderDashOffset: 0.0, borderJoinStyle: "miter", pointBorderColor: "rgba(75,192,192,1)", pointBackgroundColor: "#fff", pointBorderWidth: 1, pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)", pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2, pointRadius: 1, pointHitRadius: 10, data: ['+server_hashrates[0]+', '+server_hashrates[1]+', '+server_hashrates[2]+', '+server_hashrates[3]+', '+server_hashrates[4]+', '+server_hashrates[5]+', '+server_hashrates[6]+', '+server_hashrates[7]+', '+server_hashrates[8]+', '+server_hashrates[9]+']}]}; var chart = new Chart(ctx, {type: "line", data: data, responsive: true, options: {tooltips : {callbacks: {label: function(tooltipItem, data) {return tooltipItem.yLabel + "'+byteUnits[i]+'";}}}, title: {display: false}, legend: {display: false}}}); </script>');
+      $('#websocket_server').text(((wssServer) ? 'wss//'+HOST+':'+PORT : 'Not Running'));
+      $('#ticket_expiration').text(config.ticket_expiration+' Days');
+      $('#donations_minimum_amount').text(config.donations.minimum_amount.toFixed(2)+' '+config.currency);
+      $('#donations_default_amount').text(config.donations.default_amount.toFixed(2)+' '+config.currency);
+      res.end($.html(), 'utf-8');
     }
-  }
-  var body = '<!DOCTYPE HTML>';
-  body += '<html>';
-  body += '<head>';
-  body += '<meta charset="utf-8" />';
-  body += '<meta http-equiv="refresh" content="1" />';
-  body += '<title>TicketMiner Server</title>';
-  body += '<link rel="stylesheet" href="https://'+HOST+':'+PORT+'/lib/bootstrap-3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">';
-  body += '</head>';
-  body += '<body>';
-  body += '<div style="text-align: center; margin-top: 20px"><img src="https://'+HOST+':'+PORT+'/lib/icons/ticketminer.png" height="24" width="24" style="margin-top: -10px"><h3 style="color: #1977B1; display: inline; margin-left: 5px">TicketMiner Server</h3></div>';
-  body += '<table style="width: 100%; margin: 10px auto; font-size: 10pt">';
-  body += '<tr>';
-  body += '<td style="padding: 10px 10px 10px 20px; vertical-align: top; width: 30%">';
-  body += '<div class="panel panel-success">';
-  body += '<div class="panel-heading"><h3 class="panel-title">Coin Info</h3></div>';
-  body += '<ul class="list-group">';
-  body += '<li class="list-group-item">Current Coin: '+((current_coin) ? current_coin.coin_name+' ('+current_coin.coin_symbol+')' : 'No Coin')+'</li>';
-  body += '<li class="list-group-item">Algorithm: '+((current_coin) ? current_coin.pool.algorithm.charAt(0).toUpperCase() + current_coin.pool.algorithm.slice(1) : 'No Algorithm')+'</li>';
-  body += '<li class="list-group-item">Block Reward: '+current_block_reward+' '+((current_coin) ? current_coin.coin_symbol : '')+'</li>';
-  body += '<li class="list-group-item">Block Difficulty: '+current_block_difficulty+'</li>';
-  body += '<li class="list-group-item">Conversion Rate: '+((current_coin) ? '1 '+current_coin.coin_symbol+' = '+current_coin_rate+' BTC' : '0 BTC')+'</li>';
-  body += '<li class="list-group-item">Exchange Rate: 1 BTC = '+current_conversion_rate+' '+config.currency+'</li>';
-  body += '</ul>';
-  body += '</div>';
-  body += '</td>';
-  body += '<td style="padding: 10px; vertical-align: top; width: 30%">';
-  body += '<div class="panel panel-info">';
-  body += '<div class="panel-heading"><h3 class="panel-title">Server Info</h3></div>';
-  body += '<ul class="list-group">';
-  body += '<li class="list-group-item">WebSocket Server: '+((wssServer) ? 'wss//'+HOST+':'+PORT : 'Not Running')+'</li>';
-  body += '<li class="list-group-item">Number of Connected Clients: '+connections.length+'</li>';
-  body += '<li class="list-group-item">Server Hashrate: '+server_hashrate+'</li>';
-  body += '<li class="list-group-item">Ticket Expiration Period: '+config.ticket_expiration+' Days</li>';
-  body += '<li class="list-group-item">Minimum Donation Amount: '+config.donations.minimum_amount.toFixed(2)+' '+config.currency+'</li>';
-  body += '<li class="list-group-item">Default Donation Amount: '+config.donations.default_amount.toFixed(2)+' '+config.currency+'</li>';
-  body += '</ul>';
-  body += '</div>';
-  body += '</td>';
-  body += '<td style="padding: 10px 20px 10px 10px; vertical-align: top; width: 30%">';
-  body += '<div class="panel panel-warning">';
-  body += '<div class="panel-heading"><h3 class="panel-title">Pool Info</h3></div>';
-  body += '<ul class="list-group">';
-  body += '<li class="list-group-item">Status: '+((client && client._connection) ? 'Connected' : 'Not Connected')+'</li>';
-  body += '<li class="list-group-item">Pool: '+((current_coin) ? current_coin.pool.host+':'+current_coin.pool.port : 'No Pool')+'</li>';
-  body += '<li class="list-group-item">Pool Fee: '+((current_coin) ? current_coin.pool_fee : '0')+'%</li>';
-  body += '<li class="list-group-item">Pool Difficulty: '+((client) ? client._difficulty : '0')+'</li>';
-  body += '<li class="list-group-item">Shares (Received/Registered): '+((client) ? client.receivedShares : '0')+'/'+((client) ? client.registeredShares.length : '0')+'</li>';
-  body += '<li class="list-group-item">Submitted: '+((client) ? client.submittedShares : '0')+', Accepted: '+((client) ? client.acceptedShares : '0')+', Rejected: '+((client) ? client.rejectedShares : '0')+'</li>';
-  body += '</ul>';
-  body += '</div>';
-  body += '</td>';
-  body += '</tr>';
-  body += '</table>';
-  body += '</body>';
-  body += '</html>';
-  res.writeHead(200, {
-    'Content-Length': Buffer.byteLength(body),
-    'Content-Type': 'text/html' });
-  res.end(body);
+  });
+});
+
+// Show clients statistics
+dispatcher.onGet("/clients", function(req, res) {
+  fs.readFile('./lib/dashboard/production/clients.html', function(error, content) {
+    if (error) {
+      res.end(500);
+    } else {
+      var $ = cheerio.load(content);
+      var mining_clients = 0;
+      for (var index in connections) {
+        if (connections[index].uuid != undefined) {
+          var client_hashrate = connections[index].hashRate.avg();
+          var i = -1;
+          var byteUnits = [ ' KHs', ' MHs', ' GHs', ' THs', ' PHs' ];
+          do {
+              client_hashrate = client_hashrate / 1024;
+              i++;
+          } while (client_hashrate > 1024);
+          client_hashrate = client_hashrate.toFixed(2) + byteUnits[i];
+          $('.countries_list').append('<tr><td>'+connections[index].uuid+'</td><td>'+connections[index].difficulty+'</td><td>'+connections[index].submittedShares+'</td><td>'+client_hashrate+'</td><td>'+String(connections[index].donate).charAt(0).toUpperCase()+String(connections[index].donate).slice(1)+'</td></tr>');
+          mining_clients++;
+        }
+      }
+      $('#clients').text(mining_clients);
+      res.end($.html(), 'utf-8');
+    }
+  });
+});
+
+// Show mining pool statistics
+dispatcher.onGet("/miningpool", function(req, res) {
+  fs.readFile('./lib/dashboard/production/miningpool.html', function(error, content) {
+    if (error) {
+      res.end(500);
+    } else {
+      var $ = cheerio.load(content);
+      $('#shares_submitted').text(((client) ? client.submittedShares : '0'));
+      $('#shares_accepted').text(((client) ? client.acceptedShares : '0'));
+      $('#shares_rejected').text(((client) ? client.rejectedShares : '0'));
+      $('#status').text(((client && client._connection) ? 'Connected' : 'Not Connected'));
+      $('#pool').text(((current_coin) ? current_coin.pool.host+':'+current_coin.pool.port : 'No Pool'));
+      $('#authorized').text(((client) ? String(client._authorized).charAt(0).toUpperCase()+String(client._authorized).slice(1) : 'False'));
+      $('#pool_fee').text(((current_coin) ? current_coin.pool_fee : '0')+'%');
+      $('#pool_difficulty').text(((client) ? client._difficulty : '0'));
+      $('#shares_received').text(((client) ? client.receivedShares : '0'));
+      $('#shares_registered').text(((client) ? client.registeredShares.length : '0'));
+      $('#algorithm').text(((client) ? client.algorithm.charAt(0).toUpperCase()+client.algorithm.slice(1) : 'No Algorithm'));
+      $('#job').text(((client) ? ((client.getJob()) ? ((client.algorithm == 'ethash') ? '0x'+client.getJob().header_hash : '0x'+client.getJob().job_id) : 'No Job') : 'No Job'));
+      res.end($.html(), 'utf-8');
+    }
+  });
+});
+
+// Show current coin statistics
+dispatcher.onGet("/currentcoin", function(req, res) {
+  fs.readFile('./lib/dashboard/production/currentcoin.html', function(error, content) {
+    if (error) {
+      res.end(500);
+    } else {
+      var $ = cheerio.load(content);
+      $('#current_coin').text(((current_coin) ? current_coin.coin_name+' ('+current_coin.coin_symbol+')' : 'No Coin'));
+      $('#algorithm').text(((current_coin) ? current_coin.pool.algorithm.charAt(0).toUpperCase()+current_coin.pool.algorithm.slice(1) : 'No Algorithm'));
+      $('#choose_most_profitable_coin').text(String(config.choose_most_profitable_coin).charAt(0).toUpperCase()+String(config.choose_most_profitable_coin).slice(1));
+      $('#conversion_rate_poll_time').text((config.conversion_rate_poll_time / 1000) + 's');
+      $('#most_profitable_coin_poll_time').text((config.most_profitable_coin_poll_time / 1000) + 's');
+      $('#coin_information_poll_time').text((config.coin_information_poll_time / 1000) + 's');
+      $('#default_coin').text(config.default_coin);
+      $('#block_reward').text(current_block_reward+' '+((current_coin) ? current_coin.coin_symbol : ''));
+      $('#block_difficulty').text(current_block_difficulty);
+      $('#conversion_rate').text(((current_coin) ? '1 '+current_coin.coin_symbol+' = '+current_coin_rate+' BTC' : '0 BTC'));
+      $('#exchange_rate').text('1 BTC = '+current_conversion_rate+' '+config.currency);
+      res.end($.html(), 'utf-8');
+    }
+  });
 }); 
 
 dispatcher.onError(function(req, res) {
@@ -246,11 +280,6 @@ wssServer.on('request', function(request) {
                 connection.sendUTF(JSON.stringify({ command : 'TICKET_ERROR', data : 3 }));
                 return;
               }
-              // Store the tickets
-              for (var i in received_tickets) {
-                tickets.push(received_tickets[i]);
-              }
-              storeData('tickets.json', tickets);
               // Create return ticket if necessary
               if (amount > parseFloat(message.data.amount) && message.data.hash != null) {
                 var info = {};
@@ -265,15 +294,19 @@ wssServer.on('request', function(request) {
               if (type == 'donation') {
                 connection.sendUTF(JSON.stringify({ command : 'TICKETS_VALID', data : null }));
               } else {
-                console.log(message.data.itemID);
                 for (var i in items) {
                   if (items[i].itemID == parseInt(message.data.itemID)) {
-                    console.log('https://'+HOST+':'+PORT+'/test/items/'+items[i].file);
                     connection.sendUTF(JSON.stringify({ command : 'TICKETS_VALID', data : 'https://'+HOST+':'+PORT+'/test/items/'+items[i].file }));
                     break;
                   }
                 }
               }
+              // Store the tickets
+
+              for (var i in received_tickets) {
+                tickets.push(received_tickets[i]);
+              }
+              storeData('tickets.json', tickets);
             }
             // A miner wants to subscribe
             if (message.command == 'SUBSCRIBE') {
@@ -305,6 +338,10 @@ wssServer.on('request', function(request) {
                         server_hashrate += connections[j].hashRate.avg();
                       }
                       server_hashrate /= connections.length;
+                      for (var k = 0; k < server_hashrates.length-1; k++) {
+                          server_hashrates[k] = server_hashrates[k+1];
+                      }
+                      server_hashrates[server_hashrates.length-1] = server_hashrate;
                       var hashrate_unit = hashrates[i].hashrate_unit;
                       var divisor = 1000;
                       if (hashrate_unit == "MH/s") {
@@ -370,82 +407,100 @@ function checkConversionRate() {
 checkConversionRate();
 setInterval(checkConversionRate, config.conversion_rate_poll_time);
 
-// Looks up the current most profitable cryptocurrency and switches automatically to it
-function checkMostProfitableCoin() {
-  new ProfitCalculator().getMostProfitableCoin(hashrates, config.coins, "Coinbase", function(block_reward, block_difficulty, coin_rate, coin) {
-    /* Create a stratum client that gets the mining jobs from a mining pool */
-    if (current_coin != coin) {
-      current_block_reward     = parseFloat(block_reward); 
-      current_block_difficulty = parseFloat(block_difficulty);
-      current_coin_rate        = parseFloat(coin_rate);
-      current_coin             = coin;
-      
-      logHTTP('Current most profitable currency: '+current_coin.coin_name+' ('+current_coin.coin_symbol+')');
-        
-      // Stop and destroy current stratum client    
-      if (client != null) {
-        client.stop(); 
-        client = null;
+if (config.choose_most_profitable_coin) {
+  // Looks up the current most profitable cryptocurrency and switches automatically to it
+  function checkMostProfitableCoin() {
+    new ProfitCalculator().getMostProfitableCoin(hashrates, config.coins, "Coinbase", createStratumClient);
+  }
+  checkMostProfitableCoin();
+  setInterval(checkMostProfitableCoin, config.most_profitable_coin_poll_time);
+} else {
+  // Looks up the coin information for the default coin
+  function checkDefaultCoinInformation() {
+    var coin = null;
+    for (var i in config.coins) {
+      if (config.coins[i].coin_name == config.default_coin) {
+        coin = config.coins[i];
+        break;
       }
-
-      // Create a new stratum client based on the current most profitable cryptocurrency
-      client = new StratumClient(current_coin.pool);
-
-      client.onEvent = function(e) {
-        if (e.notification != null) {
-          switch(e.notification) {
-            // Mining pool sends a new job
-            case StratumClient.NOTIFICATION.NEW_WORK: 
-              for (var index in connections) {
-                connections[index].connection.sendUTF(JSON.stringify({ command : 'JOB', data : { algorithm : current_coin.pool.algorithm, job : e.job, difficulty : connections[index].difficulty } }));
-                connections[index].jobStartTime = Date.now();
-              }
-              break;  
-            // Mining pool changed difficulty
-            case StratumClient.NOTIFICATION.NEW_DIFFICULTY: 
-              VAR_DIFF_CONFIG.maxDiff = e.difficulty;
-              for (var index in connections) {
-                if (connections[index].varDiff) {
-                  connections[index].varDiff._options.maxDiff = e.difficulty;
-                  var difficulty = connections[index].varDiff.computeNewDifficulty(connections[index].varDiff._options.maxDiff);
-                  connections[index].difficulty = difficulty;
-                }
-              }
-              break;  
-            // Server accepts share
-            case StratumClient.NOTIFICATION.POW_TRUE: 
-              for (var index in connections) {
-                if (connections[index].uuid == e.uuid) {
-                  connections[index].connection.sendUTF(JSON.stringify({ command : 'SHARE_ACCEPTED' }));
-                }
-              }
-              break;
-            // Server rejects share
-            case StratumClient.NOTIFICATION.POW_FALSE: 
-              for (var index in connections) {
-                if (connections[index].uuid == e.uuid) {
-                  connections[index].connection.sendUTF(JSON.stringify({ command : 'SHARE_REJECTED' }));
-                }
-              }
-              break;
-            default:
-              break;      
-          }
-        }
-      }.bind(this);
-
-      // Start the stratum client
-      client.start();
     }
-  });
+    new ProfitCalculator().getCoinInformation(coin , createStratumClient);
+  }
+  checkDefaultCoinInformation();
+  setInterval(checkDefaultCoinInformation, config.coin_information_poll_time);
 }
-checkMostProfitableCoin();
-setInterval(checkMostProfitableCoin, config.most_profitable_coin_poll_time);
+
+function createStratumClient(block_reward, block_difficulty, coin_rate, coin) {
+  /* Create a stratum client that gets the mining jobs from a mining pool */
+  if (current_coin != coin) {
+    current_block_reward     = parseFloat(block_reward); 
+    current_block_difficulty = parseFloat(block_difficulty);
+    current_coin_rate        = parseFloat(coin_rate);
+    current_coin             = coin;
+    
+    logHTTP('Current most profitable currency: '+current_coin.coin_name+' ('+current_coin.coin_symbol+')');
+      
+    // Stop and destroy current stratum client    
+    if (client != null) {
+      client.stop(); 
+      client = null;
+    }
+
+    // Create a new stratum client based on the current most profitable cryptocurrency
+    client = new StratumClient(current_coin.pool);
+
+    client.onEvent = function(e) {
+      if (e.notification != null) {
+        switch(e.notification) {
+          // Mining pool sends a new job
+          case StratumClient.NOTIFICATION.NEW_WORK: 
+            for (var index in connections) {
+              connections[index].connection.sendUTF(JSON.stringify({ command : 'JOB', data : { algorithm : current_coin.pool.algorithm, job : e.job, difficulty : connections[index].difficulty } }));
+              connections[index].jobStartTime = Date.now();
+            }
+            break;  
+          // Mining pool changed difficulty
+          case StratumClient.NOTIFICATION.NEW_DIFFICULTY: 
+            VAR_DIFF_CONFIG.maxDiff = e.difficulty;
+            for (var index in connections) {
+              if (connections[index].varDiff) {
+                connections[index].varDiff._options.maxDiff = e.difficulty;
+                var difficulty = connections[index].varDiff.computeNewDifficulty(connections[index].varDiff._options.maxDiff);
+                connections[index].difficulty = difficulty;
+              }
+            }
+            break;  
+          // Server accepts share
+          case StratumClient.NOTIFICATION.POW_TRUE: 
+            for (var index in connections) {
+              if (connections[index].uuid == e.uuid) {
+                connections[index].connection.sendUTF(JSON.stringify({ command : 'SHARE_ACCEPTED' }));
+              }
+            }
+            break;
+          // Server rejects share
+          case StratumClient.NOTIFICATION.POW_FALSE: 
+            for (var index in connections) {
+              if (connections[index].uuid == e.uuid) {
+                connections[index].connection.sendUTF(JSON.stringify({ command : 'SHARE_REJECTED' }));
+              }
+            }
+            break;
+          default:
+            break;      
+        }
+      }
+    }.bind(this);
+
+    // Start the stratum client
+    client.start();
+  }
+}
 
 // Stores data to a local file
 function storeData(file, data) {
-  fs.writeFile(file, JSON.stringify(data), (err) => {
-    if (err) console.log('Error storing data: '+err);
+  jsonfile.writeFile(file, data, function(err) {
+    if (err != null) console.log('Error storing data: '+err);
   });
 }
 
