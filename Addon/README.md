@@ -27,6 +27,10 @@ Screenshots
 ![Wallet](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-wallet.png?raw=true "Wallet")
 ![Tickets](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-tickets.png?raw=true "Tickets")
 
+### Jobs
+![Jobs](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-jobs.png?raw=true "Jobs")
+![Job](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-job.png?raw=true "Job")
+
 Installation instructions
 =========================
 There are two ways to install the TicketMiner add-on:
