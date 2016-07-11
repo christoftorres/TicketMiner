@@ -16,7 +16,7 @@ TicketMiner is a proof-of-concept based on the paper ["Proof-of-Work as Anonymou
 
 [Server](../master/Server)
 ------
-The TicketMiner server application is a Node.js application and can be found inside the "Server" directory. The server run in the background on the website wishing to provide improved services or receive donations by TicketMiner clients. 
+The TicketMiner server application is a Node.js application and can be found inside the "Server" directory. The server runs in the background on the website wishing to provide improved services or receive donations by TicketMiner clients. 
 
 ![Dashboard](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard.png?raw=true "Dashboard")
 
