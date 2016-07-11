@@ -16,13 +16,21 @@ TicketMiner is a proof-of-concept based on the paper ["Proof-of-Work as Anonymou
 
 This repository contains a server application, a client application and a couple of test cases.
 
-[Server](../Server)
+[Server](../blob/master/Server)
 ------
 The server application is a Node.js application and can be found inside the "Server" directory. The server run in the background on the website wishing to provide improved services or receive donations by TicketMiner clients. 
 
-Client
+![Dashboard](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard.png?raw=true "Dashboard")
+
+[Client](../blob/master/Client)
 ------
 The client application is a Mozilla Firefox add-on that runs inside the Firefox browser and mines tickets from TicketMiner enabled websites. The client can be found inside the "Addon" directory.
+
+![Main Menu](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-main-menu.png?raw=true "Main Menu")
+![Wallet](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-wallet.png?raw=true "Wallet")
+![Miner](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-miner.png?raw=true "Miner")
+![Jobs](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-jobs.png?raw=true "Jobs")
+![Settings](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-settings.png?raw=true "Settings")
 
 Test Cases
 ----------
