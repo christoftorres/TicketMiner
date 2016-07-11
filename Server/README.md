@@ -17,6 +17,15 @@ Screenshots
 ### Dashboard
 ![Dashboard](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard%20.png?raw=true "Dashboard")
 
+### Clients
+![Clients](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-clients.png?raw=true "Clients")
+
+### Mining Pool
+![Clients](https://github.com/christoftorres/TicketMiner/blob/master/Server/screenshots/screen-miningpool.png?raw=true "Clients")
+
+### Current Coin
+![Current Coin](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-currentcoin.png?raw=true "Current Coin")
+
 Installation instructions
 =========================
 There are some prerequisites before being able to install the TicketMiner Server software. You will have to have Node.js and the node package manager npm pre-installed on your system. Node.js is an open source Javascript runtime environment for easily building server-side and networking applications.
