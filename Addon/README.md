@@ -23,6 +23,10 @@ Screenshots
 ### Main Menu
 ![Main Menu](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-main_menu.png?raw=true "Main Menu")
 
+### Wallet
+![Wallet](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-wallet.png?raw=true "Wallet")
+![Tickets](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-tickets.png?raw=true "Tickets")
+
 Installation instructions
 =========================
 There are two ways to install the TicketMiner add-on:
