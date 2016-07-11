@@ -29,9 +29,11 @@ The TicketMiner client application is a Mozilla Firefox add-on that runs inside 
 ![Miner](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-miner.png?raw=true "Miner")
 ![Job](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-job.png?raw=true "Job")
 
-Test Cases
+[Test Cases](../master/TestCases)
 ----------
-In addition, this project also includes two test cases, illustrating two possible use cases of TicketMiner services, namely donations and mirco-payments inside e-commerce websites.
+In addition, this project also includes two test cases, illustrating two possible use cases of TicketMiner services, namely donations and mirco-payments inside e-commerce websites. These two test cases can be found inside the "TestCases" directory.
+
+![Large Coffee](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/TestCases/screenshots/screen-large-coffee.png?raw=true "Large Coffee")
 
 References
 =========================
