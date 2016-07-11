@@ -15,7 +15,7 @@ TicketMiner Server is a proof-of-concept, that acts as a proxy between TicketMin
 Screenshots
 -----------
 ### Dashboard
-![Dashboard](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard%20.png?raw=true "Dashboard")
+![Dashboard](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard.png?raw=true "Dashboard")
 
 ### Clients
 ![Clients](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-clients.png?raw=true "Clients")
