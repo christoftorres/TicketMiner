@@ -16,13 +16,13 @@ TicketMiner is a proof-of-concept based on the paper ["Proof-of-Work as Anonymou
 
 This repository contains a server application, a client application and a couple of test cases.
 
-[Server](../blob/master/Server)
+[Server](../master/Server)
 ------
 The server application is a Node.js application and can be found inside the "Server" directory. The server run in the background on the website wishing to provide improved services or receive donations by TicketMiner clients. 
 
 ![Dashboard](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard.png?raw=true "Dashboard")
 
-[Client](../blob/master/Client)
+[Client](../master/Client)
 ------
 The client application is a Mozilla Firefox add-on that runs inside the Firefox browser and mines tickets from TicketMiner enabled websites. The client can be found inside the "Addon" directory.
 
@@ -31,6 +31,9 @@ The client application is a Mozilla Firefox add-on that runs inside the Firefox 
 ![Miner](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-miner.png?raw=true "Miner")
 ![Jobs](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-jobs.png?raw=true "Jobs")
 ![Settings](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-settings.png?raw=true "Settings")
+![Donation With Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-donation-with-balance.png?raw=true "Donation With Balance")
+![Purchase With Balance](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-purchase-with-balance.png?raw=true "Purchase With Balance")
+![Job](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Addon/screenshots/screen-job.png?raw=true "Job")
 
 Test Cases
 ----------
