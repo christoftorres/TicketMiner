@@ -1,5 +1,5 @@
 /** 
-  -- request.js -- 
+  -- Request.js -- 
   Author : Christof Torres <christof.ferreira.001@student.uni.lu>
   Date   : June 2016
 **/

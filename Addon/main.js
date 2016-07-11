@@ -71,7 +71,7 @@ panel.port.on('change-panel-size', function(data) {
 // Create a page worker that listens to events coming from websites
 pageMod.PageMod({
   include: "*",
-  contentScriptFile: self.data.url("request.js"),
+  contentScriptFile: self.data.url("../lib/Request.js"),
   onAttach: function(worker) {
     // Donation event
     worker.port.on("donate-by-ticket-request", function(details) {
