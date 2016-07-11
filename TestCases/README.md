@@ -25,10 +25,28 @@ This test case illustrates how the TicketMiner service could easily provide a ne
 * Small blue
 * Small coffee
 
+### Screenshots
+
+#### Large coffee
+![Large Coffee](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/TestCases/screenshots/screen-large-coffee.png?raw=true "Large Coffee")
+
+#### Large lightbulb
+![Large Lightbulb](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/TestCases/screenshots/screen-large-lightbulb.png?raw=true "Large Lightbulb")
+
+#### Small blue
+![Small Blue](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/TestCases/screenshots/screen-small-blue.png?raw=true "Small Blue")
+
+#### Small coffee
+![Small Coffee](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/TestCases/screenshots/screen-small-coffee.png?raw=true "Small Coffee")
+
 E-commerce
 ----------
 
 This test case illustrates how the TicketMiner service could easily be used for micro-payments on e-commerce websites. The test case website permits a user to choose and buy four different pictures online. By clicking on the "Buy now!" button, the user will initialize the payment process by submitting his mined tickets to the server, and on success, the watermark-free and full resolution picture will be downloaded from the e-commerce website to the local downloads directory on the user's computer.
+
+### Screenshot
+
+![E-Commerce](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/TestCases/screenshots/screen-e-commerce.png?raw=true "E-Commmerce")
 
 Installation instructions
 =========================
