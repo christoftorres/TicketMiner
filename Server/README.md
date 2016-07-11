@@ -12,6 +12,10 @@ About
 =========================
 TicketMiner Server is a proof-of-concept, that acts as a proxy between TicketMiner clients and a mining pool. It coordinates all the communication between client and mining pool, in addition it provides improved services to clients in exchange for mined tickets.
 
+Screenshots
+-----------
+![Dashboard](https://raw.githubusercontent.com/christoftorres/TicketMiner/master/Server/screenshots/screen-dashboard%20.png?raw=true "Dashboard")
+
 Installation instructions
 =========================
 There are some prerequisites before being able to install the TicketMiner Server software. You will have to have Node.js and the node package manager npm pre-installed on your system. Node.js is an open source Javascript runtime environment for easily building server-side and networking applications.
