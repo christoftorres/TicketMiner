@@ -45,7 +45,20 @@
             if (id == window.jobs[index].id) {
               window.jobs[index].status = status;
               $("#job_"+id).find("#status").text(status);
-              $("#job-info-status").text(status);
+              if (window.activeJob == id) {
+                $("#job-info-status").text(status);
+              }
+              if (status == 'Running' || status == 'Connected') {
+                $("#job_"+id).find("#status").css("color", "limegreen");
+                if (window.activeJob == id) {
+                  $("#job-info-status").css("color", "limegreen");
+                }
+              } else {
+                $("#job_"+id).find("#status").css("color", "red");
+                if (window.activeJob == id) {
+                  $("#job-info-status").css("color", "red");
+                }
+              }
               if (status == 'Stopped' || status == 'Connection Error') {
                 $("#job_"+id).find("#start").show();
                 $("#job_"+id).find("#stop").hide();
