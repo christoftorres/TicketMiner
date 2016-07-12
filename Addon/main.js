@@ -1,7 +1,7 @@
 /** 
   -- main.js -- 
   Author : Christof Torres <christof.ferreira.001@student.uni.lu>
-  Date   : June 2016
+  Date   : July 2016
 **/
 
 // Load the required modules
@@ -62,7 +62,7 @@ var panel = panels.Panel({
 // Change the height of the panel
 panel.port.on('change-panel-size', function(data) {
   if (data == 'extended-view') {
-    panel.resize(panel.width, 312);
+    panel.resize(panel.width, 322);
   } else {
     panel.resize(panel.width, 220);
   }

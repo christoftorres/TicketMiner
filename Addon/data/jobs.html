@@ -17,6 +17,14 @@
 		var hours   = Math.floor(x) % 24;
 		return ((hours < 10) ? '0' : '')+hours+':'+((minutes < 10) ? '0' : '')+minutes+':'+((seconds < 10) ? '0' : '')+seconds;
 	}
+    function getReadableEstimationString(estimation) {
+	    var seconds = Math.floor(estimation) % 60;
+		estimation /= 60;
+		var minutes = Math.floor(estimation) % 60;
+		estimation /= 60;
+		var hours   = Math.floor(estimation) % 24;
+		return ((hours < 10) ? '0' : '')+hours+':'+((minutes < 10) ? '0' : '')+minutes+':'+((seconds < 10) ? '0' : '')+seconds;
+	}
 	function getReadableHashRateString(hashrate){
 	    var i = -1;
 	    var byteUnits = [ ' KHs', ' MHs', ' GHs', ' THs', ' PHs' ];
@@ -41,7 +49,7 @@
         }
         $("#jobs").append('<table style="width: 100%; margin-top: 0px">'+
     		'<tr><td colspan="2" style="font-size: 8pt"><small style="margin: 0px 5px 0px 10px; font-weight: bold">Server:</small><small><span id="server" style="font-style: italic">'+getHostName(job.server)+'</span></small>&nbsp;<img id="security" src="'+(job.server.includes("wss://") ? 'icons/secure.png' : 'icons/not-secure.png')+'" height="8" width="8" style="cursor: pointer" data-toggle="tooltip" title="'+(job.server.includes("wss://") ? 'Connection is secure' : 'Connection is not secure')+'"></td></tr>'+
-    		'<tr><td colspan="2" style="padding: 5px"><div class="panel panel-default" style="margin: 0px; text-align: left"><div class="panel-heading" style="font-size: 8pt; font-weight: bold; height: 20px; padding: 4px 10px">Job Info</div><div class="panel-body" style="font-size: 7pt; height: 195px; padding: 5px 0px">'+
+    		'<tr><td colspan="2" style="padding: 5px"><div class="panel panel-default" style="margin: 0px; text-align: left"><div class="panel-heading" style="font-size: 8pt; font-weight: bold; height: 20px; padding: 4px 10px">Job Info</div><div class="panel-body" style="font-size: 7pt; height: 205px; padding: 5px 0px">'+
     			'<div style="padding: 2px 7px"><canvas id="hashRateChart" style="border: 1px solid lightgray; margin: 0px; padding: 0px" width="120px" height="35px"></canvas></div>'+
     			'<table>'+
     				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Status:</span></td><td><span id="job-info-status">'+((job.status == 'Running' || job.status == 'Connected') ? '<span style="color: limegreen">'+job.status+'</span>' : '<span style="color: red">'+job.status+'</span>')+'</span></td></tr>'+
@@ -49,7 +57,10 @@
     				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Algorithm:</span></td><td><span id="algorithm">'+String(job.algorithm).charAt(0).toUpperCase()+String(job.algorithm).slice(1)+((job.algorithm == 'ethash') ? ' ('+String(window.preferences.ethashClient).charAt(0).toUpperCase()+String(window.preferences.ethashClient).slice(1)+')' : '')+'</span></td></tr>'+
     				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Difficulty:</span></td><td><span id="difficulty">'+job.difficulty+'</span></td></tr>'+
     				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Duration:</span></td><td><span id="duration">'+getReadableDurationString(job.duration)+'</span></td></tr>'+
-    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Donation:</span></td><td><span id="donate">'+String(job.donate).charAt(0).toUpperCase()+String(job.donate).slice(1)+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Estimation:</span></td><td><span id="estimation">'+((job.algorithm == 'ethash') ? 
+                  getReadableEstimationString(job.difficulty*Math.pow(2, 64)/job.avgHashRate) : ((job.algorithm == 'sha256') ? 
+                  getReadableEstimationString(job.difficulty*Math.pow(2, 32)/job.avgHashRate) : getReadableEstimationString(job.difficulty*Math.pow(2, 16)/job.avgHashRate)))+'</span></td></tr>'+
+    				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Donating:</span></td><td><span id="donate">'+String(job.donate).charAt(0).toUpperCase()+String(job.donate).slice(1)+'</span></td></tr>'+
     				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Amount:</span></td><td><span id="amount">'+job.amount.toFixed(5)+' '+window.preferences.currency+'</span></td></tr>'+
     				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Speed:</span></td><td><span id="job-info-speed">'+getReadableHashRateString(job.hashRate)+'</span></td></tr>'+
     				'<tr><td><span style="padding: 0px 5px 0px 10px; font-weight: bold">Avg. Speed:</span></td><td><span id="avgspeed">'+getReadableHashRateString(job.avgHashRate)+'</span></td></tr>'+
@@ -133,7 +144,7 @@
 			for (var index in window.jobs) {
 				var job = window.jobs[index];
 				$list_group.append('<table id="job_'+job.id+'" style="font-size: xx-small; text-align: left; padding: 5px 0px 5px 5px" class="list-group-item">'+
-						'<tr><td style="width: 35px"><b>Server:&nbsp;</b></td><td style="width: 75px; font-style: italic">'+getHostName(job.server)+'&nbsp;<img id="security" src="icons/not-secure.png" height="8" width="8"></td>'+
+						'<tr><td style="width: 35px"><b>Server:&nbsp;</b></td><td style="width: 75px; font-style: italic">'+getHostName(job.server)+'&nbsp;<img id="security" src="'+(job.server.includes("wss://") ? 'icons/secure.png' : 'icons/not-secure.png')+'" height="8" width="8" style="cursor: pointer" data-toggle="tooltip" title="'+(job.server.includes("wss://") ? 'Connection is secure' : 'Connection is not secure')+'"></td>'+
 							'<td rowspan="3" style="font-size: small">'+
 								((job.donate) ? '<img src="icons/donate-100.png" height="16" width="16" style="padding-left: 0px; cursor: pointer" data-toggle="tooltip" title="Donating">' : '<img src="icons/tickets-100.png" height="16" width="16" style="padding-left: 2px; cursor: pointer" data-toggle="tooltip" title="Mining Tickets">')+'</td>'+
 							'<td rowspan="3" style="font-size: small">'+
@@ -150,11 +161,7 @@
 					$list_group.find("#job_"+job.id).find("#start").hide();
 					$list_group.find("#job_"+job.id).find("#stop").show();
 				}
-				if (job.server.includes('wss://')) {  
-			        $list_group.find("#security").attr("src", "icons/secure.png");
-			    } else {
-			        $list_group.find("#security").attr("src", "icons/not-secure.png");
-			    }
+				$('[data-toggle="tooltip"]').tooltip();
 			}
 			$("#jobs").html($list_group);
 			var $label = $("<div>", {class: "small", style: "text-align: center; color: gray"});

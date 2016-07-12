@@ -1,7 +1,7 @@
 /** 
   -- Miner.js -- 
   Author : Christof Torres <christof.ferreira.001@student.uni.lu>
-  Date   : June 2016
+  Date   : July 2016
 **/
 
 // Create a miner instance based on the options received by the main logic
@@ -172,9 +172,9 @@ Miner.prototype.onEvent = function(e) {
             break;
         case Miner.NOTIFICATION.STATISTIC:
             // Notify the main logic about the current hashrate, average hashrate and duration
+            self.port.emit("miner-notification-duration", (Date.now() - this._startTime));
             self.port.emit("miner-notification-hashrate", Math.round(e.hashRate));
             self.port.emit("miner-notification-average-hashrate", Math.round(this.avgHashRate.avg()));
-            self.port.emit("miner-notification-duration", (Date.now() - this._startTime));
             break;
         default:
             break;

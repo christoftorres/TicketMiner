@@ -1,7 +1,7 @@
 /** 
   -- RingBuffer.js -- 
   Author : Christof Torres <christof.ferreira.001@student.uni.lu>
-  Date   : June 2016
+  Date   : July 2016
 **/
 
 /* Initializes the RingBuffer with a maximum size */
@@ -29,7 +29,7 @@ RingBuffer.prototype.append = function(x) {
 
 /* Computes the average of the items contained inside the RingBuffer */
 RingBuffer.prototype.avg = function() {
-    if (data.length === 0) return 0.0;
+    if (this.data.length === 0) return 0.0;
     var sum = this.data.reduce(function(a, b) { return a + b });
     return sum / (this.isFull ? this.maxSize : this.cursor);
 };
