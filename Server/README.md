@@ -35,13 +35,12 @@ There are two ways to get Node.js and npm:
 1. Download and install Node.js from [nodejs.org](https://nodejs.org/en/). Node.js includes npm.
 2. Or, if you have a package manager like APT, install Node.js and npm via that. For example, in an Ubuntu or Debian terminal window, enter: ***sudo apt-get install nodejs nodejs-legacy npm***
 
-Important note for Ubuntu users: Please  make sure that you have installed the latest version of Node.js and npm by running the following two commands:
+**Important note for Ubuntu users:** Please  make sure that you have installed the latest version of Node.js and npm by running the following two commands:
 
 	node -v
-	
 	npm -v
 
-The Node.js version should be 4.x.x or higher and the npm version should be 3.x.x or higher. If this is not the case, then you can try to install manually the latest version of nodejs by running the following commands in the console:
+The Node.js version should be 4.x.x or higher and the npm version should be 3.x.x or higher. If this is not the case, then you can try to install manually the latest version of Node.js by running the following commands inside the console:
 
 	sudo apt-get purge nodejs npm
 	curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
